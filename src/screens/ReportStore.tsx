@@ -3,14 +3,24 @@
  * Markup mirrors .stitch/html/02_프리미엄_리포트_스토어_5b15eb14.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { byId, query, queryAll } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
 export const BODY_CLASS =
   "bg-surface font-body-md text-on-surface flex flex-col min-h-screen";
 
+const NAV_TABS = [
+  { path: '/home', label: '홈', icon: 'home', matches: ['/home'] },
+  { path: '/saved-saju', label: '내 사주', icon: 'view_column', matches: ['/saved-saju'] },
+  { path: '/ai-chat', label: 'AI 상담', icon: 'forum', matches: ['/ai-chat'] },
+  { path: '/more', label: '더보기', icon: 'more_horiz', matches: ['/more', '/store'] },
+] as const;
+
 export default function ReportStore() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const modal = byId('report-modal');
@@ -127,7 +137,7 @@ export default function ReportStore() {
                   </span>
                   <p className="font-headline-md text-headline-md text-primary-container" id="modal-price">15,900원</p>
                 </div>
-                <button className="px-6 py-3.5 rounded-lg bg-primary-container text-surface-bright font-title-md text-title-md shadow-md active:scale-95 transition-transform flex items-center gap-1.5">
+                <button className="px-6 py-3.5 rounded-lg bg-primary-container text-surface-bright font-title-md text-title-md shadow-md active:scale-95 transition-transform flex items-center gap-1.5" onClick={() => navigate('/checkout')}>
                   <span className="">리포트 열람하기</span>
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </button>
@@ -380,24 +390,22 @@ export default function ReportStore() {
           </div>
         </div>
       </main>
-      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]" data-active-classes="text-primary-container font-semibold">
+      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]">
         <div className="flex justify-around items-center h-16 px-gutter">
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">
-            <span className="material-symbols-outlined text-[22px]">home</span>
-            <span className="font-label-sm text-label-sm mt-1">홈</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="my-saju" href="#">
-            <span className="material-symbols-outlined text-[22px]">view_column</span>
-            <span className="font-label-sm text-label-sm mt-1">내 사주</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="ai-chat" href="#">
-            <span className="material-symbols-outlined text-[22px]">forum</span>
-            <span className="font-label-sm text-label-sm mt-1">AI 상담</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-primary-container font-semibold transition-colors" data-path="more" href="#">
-            <span className="material-symbols-outlined text-[22px]">more_horiz</span>
-            <span className="font-label-sm text-label-sm mt-1">더보기</span>
-          </a>
+          {NAV_TABS.map((tab) => {
+            const active = (tab.matches as readonly string[]).includes(pathname);
+            return (
+              <Link
+                key={tab.path}
+                aria-current={active ? 'page' : undefined}
+                className={`flex flex-col items-center justify-center min-w-[56px] h-14 transition-colors ${active ? 'text-primary-container font-semibold' : 'text-on-surface-variant hover:text-on-surface'}`}
+                to={tab.path}
+              >
+                <span className="material-symbols-outlined text-[22px]">{tab.icon}</span>
+                <span className="font-label-sm text-label-sm mt-1">{tab.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>

@@ -3,14 +3,24 @@
  * Markup mirrors .stitch/html/23_사주_분석_결과_98844320.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { byId, query, queryAll } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
 export const BODY_CLASS =
   "bg-surface font-body-md text-on-surface flex flex-col min-h-screen";
 
+const NAV_TABS = [
+  { path: '/home', label: '홈', icon: 'home', matches: ['/home'] },
+  { path: '/saved-saju', label: '내 사주', icon: 'calendar_month', matches: ['/saved-saju', '/saju-result'] },
+  { path: '/ai-chat', label: 'AI 상담', icon: 'forum', matches: ['/ai-chat'] },
+  { path: '/more', label: '더보기', icon: 'more_horiz', matches: ['/more'] },
+] as const;
+
 export default function SajuResult() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     // Tab switching interactions
@@ -93,7 +103,7 @@ export default function SajuResult() {
     const modalTrigger = byId('askAiModalTrigger');
     if (modalTrigger) {
       modalTrigger.addEventListener('click', () => {
-        alert("김하늘님의 사주명식(병인일주) 데이터를 컨텍스트로 불러와 실시간 AI 대화를 연결합니다.");
+        navigate('/ai-chat');
       });
     }
     const profiles = { self: { name: '김하늘님의 사주명식', badge: '坤命 · 여명', birth: '1996. 10. 24 (양력) 辰時', dayMaster: '‘병화(丙火)’', desc: '태어난 날의 일간(日干) <strong class="text-secondary font-medium">‘병화(丙火)’</strong>를 품어 세상을 비추는 따뜻한 태양과 같은 명운입니다.', persona: '陽火의 기질', ctaText: '내 병화(丙火) 원국을 기반으로 실시간 심층 상담' }, husband: { name: '박민우님의 사주명식', badge: '乾命 · 남명', birth: '1994. 03. 12 (양력) 子時', dayMaster: '‘임수(壬水)’', desc: '태어난 날의 일간(日干) <strong class="text-secondary font-medium">‘임수(壬水)’</strong>를 품어 넓은 바다처럼 유연하고 지혜로운 명운입니다.', persona: '陽水의 기질', ctaText: '박민우님의 임수(壬水) 원국을 기반으로 실시간 심층 상담' }, firstchild: { name: '박서아님의 사주명식', badge: '坤命 · 여명', birth: '2023. 07. 05 (양력) 巳時', dayMaster: '‘갑목(甲木)’', desc: '태어난 날의 일간(日干) <strong class="text-secondary font-medium">‘갑목(甲木)’</strong>을 품어 곧게 뻗어 오르는 큰 나무와 같은 성장형 명운입니다.', persona: '陽木의 기질', ctaText: '박서아님의 갑목(甲木) 원국을 기반으로 실시간 심층 상담' } };
@@ -610,24 +620,22 @@ export default function SajuResult() {
         </div>
         {/* Micro-Interaction Logic for Tabs and Accordions */}
       </main>
-      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]" data-active-classes="text-primary-container font-semibold">
+      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]">
         <div className="flex justify-around items-center h-16 px-gutter">
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">
-            <span className="material-symbols-outlined text-[22px]">home</span>
-            <span className="font-label-sm text-label-sm mt-1">홈</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-primary-container font-semibold transition-colors" data-path="my-saju" href="#">
-            <span className="material-symbols-outlined text-[22px]">calendar_month</span>
-            <span className="font-label-sm text-label-sm mt-1">내 사주</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="ai-chat" href="#">
-            <span className="material-symbols-outlined text-[22px]">forum</span>
-            <span className="font-label-sm text-label-sm mt-1">AI 상담</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="more" href="#">
-            <span className="material-symbols-outlined text-[22px]">more_horiz</span>
-            <span className="font-label-sm text-label-sm mt-1">더보기</span>
-          </a>
+          {NAV_TABS.map((tab) => {
+            const active = (tab.matches as readonly string[]).includes(pathname);
+            return (
+              <Link
+                key={tab.path}
+                aria-current={active ? 'page' : undefined}
+                className={`flex flex-col items-center justify-center min-w-[56px] h-14 transition-colors ${active ? 'text-primary-container font-semibold' : 'text-on-surface-variant hover:text-on-surface'}`}
+                to={tab.path}
+              >
+                <span className="material-symbols-outlined text-[22px]">{tab.icon}</span>
+                <span className="font-label-sm text-label-sm mt-1">{tab.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>

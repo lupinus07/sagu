@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/08_네트워크_오류_5b2cc62d.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { byId } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,6 +12,7 @@ export const BODY_CLASS =
 
 export default function NetworkError() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const retryBtn = byId('retry-btn');
@@ -47,7 +49,7 @@ export default function NetworkError() {
             <button
               aria-label="창 닫기"
               className="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
-              onClick={() => window.location.href='#'}
+              onClick={() => navigate('/home')}
               type="button"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>

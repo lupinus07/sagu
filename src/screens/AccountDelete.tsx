@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/11_회원_탈퇴_cb0826d8.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { byId, queryAll, type El } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,6 +12,7 @@ export const BODY_CLASS =
 
 export default function AccountDelete() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const radioGroup = queryAll('input[name="withdrawal_reason"]');
@@ -46,11 +48,11 @@ export default function AccountDelete() {
       if (!deleteBtn.hasAttribute('disabled')) {
         if (confirm("정말로 탈퇴하시겠습니까? 진하님의 모든 명리학 데이터가 즉시 삭제됩니다.")) {
           alert("그동안 결(結)과 함께해 주셔서 감사했습니다. 항상 평안한 운의 흐름이 함께하기를 바랍니다.");
-          history.back();
+          navigate('/login');
         }
       }
     });
-  }, []);
+  }, [navigate]);
 
   return (
     <>

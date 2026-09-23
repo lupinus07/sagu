@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/19_페이지를_찾을_수_없음_1d93c22e.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { byId } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,12 +12,13 @@ export const BODY_CLASS =
 
 export default function NotFound() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
     byId('homeBtn')?.addEventListener('click', () => {
-      window.location.href = '/';
+      navigate('/home');
     });
-  }, []);
+  }, [navigate]);
 
   return (
     <>

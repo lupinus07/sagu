@@ -2,13 +2,23 @@
  * 더보기 — imported from the Stitch export of "AI Saju Fortune App".
  * Markup mirrors .stitch/html/12_더보기_92eedc62.html element for element; edit it here from now on.
  */
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
 export const BODY_CLASS =
   "bg-surface font-body-md text-on-surface flex flex-col min-h-screen";
 
+const NAV_TABS = [
+  { path: '/home', label: '홈', icon: 'home', matches: ['/home'] },
+  { path: '/saved-saju', label: '내 사주', icon: 'auto_stories', matches: ['/saved-saju'] },
+  { path: '/ai-chat', label: 'AI 상담', icon: 'forum', matches: ['/ai-chat'] },
+  { path: '/more', label: '더보기', icon: 'more_horiz', matches: ['/more'] },
+] as const;
+
 export default function More() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
     <>
@@ -110,7 +120,7 @@ export default function More() {
               </div>
               <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
                 {/* Row: 구매한 리포트 */}
-                <a className="flex items-center justify-between p-space-md hover:bg-surface-container-low transition-colors" href="#">
+                <Link className="flex items-center justify-between p-space-md hover:bg-surface-container-low transition-colors" to="/store">
                   <div className="flex items-center gap-space-md min-w-0">
                     <div className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary-container shrink-0">
                       <span className="material-symbols-outlined text-[20px]">auto_stories</span>
@@ -126,7 +136,7 @@ export default function More() {
                     </span>
                     <span className="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
                   </div>
-                </a>
+                </Link>
                 {/* Inner Tonal Separator */}
                 <div className="h-[1px] bg-surface-container w-full mx-space-md" />
                 {/* Row: 결제 내역 */}
@@ -176,7 +186,7 @@ export default function More() {
                 {/* Inner Tonal Separator */}
                 <div className="h-[1px] bg-surface-container w-full mx-space-md" />
                 {/* Row: 사주 계산 옵션 */}
-                <a className="flex items-center justify-between p-space-md hover:bg-surface-container-low transition-colors" href="#">
+                <Link className="flex items-center justify-between p-space-md hover:bg-surface-container-low transition-colors" to="/saju-options">
                   <div className="flex items-center gap-space-md min-w-0">
                     <div className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary-container shrink-0">
                       <span className="material-symbols-outlined text-[20px]">tune</span>
@@ -196,11 +206,11 @@ export default function More() {
                   <span className="material-symbols-outlined text-on-surface-variant text-[20px] shrink-0">
                     chevron_right
                   </span>
-                </a>
+                </Link>
                 {/* Inner Tonal Separator */}
                 <div className="h-[1px] bg-surface-container w-full mx-space-md" />
                 {/* Row: 저장된 프로필 관리 */}
-                <a className="flex items-center justify-between p-space-md hover:bg-surface-container-low transition-colors" href="#">
+                <Link className="flex items-center justify-between p-space-md hover:bg-surface-container-low transition-colors" to="/saved-saju">
                   <div className="flex items-center gap-space-md min-w-0">
                     <div className="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary-container shrink-0">
                       <span className="material-symbols-outlined text-[20px]">group</span>
@@ -216,7 +226,7 @@ export default function More() {
                     </span>
                     <span className="material-symbols-outlined text-on-surface-variant text-[20px]">chevron_right</span>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
             {/* 4. Group 3: 안내 및 고객 지원 */}
@@ -318,9 +328,9 @@ export default function More() {
             <div className="flex flex-col items-center gap-space-sm pt-space-xs pb-space-lg text-center">
               {/* Account Action Links */}
               <div className="flex items-center gap-space-md font-label-md text-label-md text-on-surface-variant">
-                <button className="hover:text-on-surface transition-colors py-1" type="button">로그아웃</button>
+                <button className="hover:text-on-surface transition-colors py-1" onClick={() => navigate('/login')} type="button">로그아웃</button>
                 <span className="opacity-30">·</span>
-                <button className="hover:text-error transition-colors py-1" type="button">회원탈퇴</button>
+                <button className="hover:text-error transition-colors py-1" onClick={() => navigate('/account-delete')} type="button">회원탈퇴</button>
               </div>
               {/* Legal Disclaimer */}
               <p className="font-label-sm text-label-sm text-on-surface-variant/80 max-w-[340px] leading-relaxed">
@@ -334,24 +344,22 @@ export default function More() {
           </div>
         </div>
       </main>
-      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]" data-active-classes="text-primary-container font-semibold">
+      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]">
         <div className="flex justify-around items-center h-16 px-gutter">
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">
-            <span className="material-symbols-outlined text-[22px]">home</span>
-            <span className="font-label-sm text-label-sm mt-1">홈</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="my-saju" href="#">
-            <span className="material-symbols-outlined text-[22px]">auto_stories</span>
-            <span className="font-label-sm text-label-sm mt-1">내 사주</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="ai-chat" href="#">
-            <span className="material-symbols-outlined text-[22px]">forum</span>
-            <span className="font-label-sm text-label-sm mt-1">AI 상담</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-primary-container font-semibold transition-colors" data-path="more" href="#">
-            <span className="material-symbols-outlined text-[22px]">more_horiz</span>
-            <span className="font-label-sm text-label-sm mt-1">더보기</span>
-          </a>
+          {NAV_TABS.map((tab) => {
+            const active = (tab.matches as readonly string[]).includes(pathname);
+            return (
+              <Link
+                key={tab.path}
+                aria-current={active ? 'page' : undefined}
+                className={`flex flex-col items-center justify-center min-w-[56px] h-14 transition-colors ${active ? 'text-primary-container font-semibold' : 'text-on-surface-variant hover:text-on-surface'}`}
+                to={tab.path}
+              >
+                <span className="material-symbols-outlined text-[22px]">{tab.icon}</span>
+                <span className="font-label-sm text-label-sm mt-1">{tab.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>

@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/04_리포트_생성_실패_072f6a58.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { byId } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,12 +12,12 @@ export const BODY_CLASS =
 
 export default function ReportFailed() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const retryBtn = byId('retry-button');
     if (retryBtn) {
       retryBtn.addEventListener('click', () => {
-        const originalContent = retryBtn.innerHTML;
         retryBtn.innerHTML = `
           <svg class="animate-spin h-5 w-5 text-surface-bright" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -26,13 +27,11 @@ export default function ReportFailed() {
         `;
         retryBtn.disabled = true;
         setTimeout(() => {
-          retryBtn.innerHTML = originalContent;
-          retryBtn.disabled = false;
-          alert('분석 서버와의 연결을 재시도합니다.');
+          navigate('/report-loading');
         }, 1500);
       });
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <>
@@ -55,7 +54,7 @@ export default function ReportFailed() {
             <button
               aria-label="창 닫기"
               className="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
-              onClick={() => window.location.href='#'}
+              onClick={() => navigate('/home')}
               type="button"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>

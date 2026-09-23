@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/24_저장된_사주_66b1b5cc.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { query } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,6 +12,7 @@ export const BODY_CLASS =
 
 export default function SavedSaju() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simple micro-interaction for demonstration of swipe toggle.
@@ -78,7 +80,7 @@ export default function SavedSaju() {
           {/* Profile List Container */}
           <div className="flex flex-col gap-space-md w-full" id="profile-container">
             {/* Card 1: User's Own Profile (나) */}
-            <div className="relative w-full rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(19,27,46,0.04)] overflow-hidden transition-all duration-300 active:scale-[0.995]">
+            <div className="relative w-full rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(19,27,46,0.04)] overflow-hidden transition-all duration-300 active:scale-[0.995] cursor-pointer" onClick={() => navigate('/saju-result')}>
               <div className="p-space-md flex items-center justify-between gap-space-sm">
                 <div className="flex items-center gap-space-md min-w-0">
                   {/* Five Elements Indicator (Earth - 황토/무토) */}
@@ -157,7 +159,7 @@ export default function SavedSaju() {
               </div>
             </div>
             {/* Card 3: Regular Profile Card (박서연) */}
-            <div className="relative w-full rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(19,27,46,0.04)] overflow-hidden transition-all duration-300 active:scale-[0.995]">
+            <div className="relative w-full rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(19,27,46,0.04)] overflow-hidden transition-all duration-300 active:scale-[0.995] cursor-pointer" onClick={() => navigate('/saju-result')}>
               <div className="p-space-md flex items-center justify-between gap-space-sm">
                 <div className="flex items-center gap-space-md min-w-0">
                   {/* Five Elements Indicator (Fire - 화/병화) */}
@@ -188,7 +190,7 @@ export default function SavedSaju() {
               </div>
             </div>
             {/* Add Profile Interactive Tile */}
-            <button className="group relative w-full rounded-xl py-5 px-space-md flex flex-col items-center justify-center gap-1.5 bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all active:scale-[0.99]" type="button">
+            <button className="group relative w-full rounded-xl py-5 px-space-md flex flex-col items-center justify-center gap-1.5 bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-all active:scale-[0.99]" onClick={() => navigate('/saju-input')} type="button">
               <div className="w-8 h-8 rounded-full bg-surface flex items-center justify-center text-secondary shadow-sm group-hover:scale-105 transition-transform">
                 <span className="material-symbols-outlined text-[20px]">add</span>
               </div>

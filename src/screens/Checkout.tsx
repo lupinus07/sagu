@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/09_결제하기_3ca054f1.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { byId, query, queryAll } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,6 +12,7 @@ export const BODY_CLASS =
 
 export default function Checkout() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Payment Method Selection Micro-interaction
@@ -95,15 +97,10 @@ export default function Checkout() {
         <span class="font-title-md text-title-md text-on-primary font-semibold">결제 승인 진행 중...</span>
       `;
       setTimeout(() => {
-        alert('안전하게 결제가 완료되었습니다. AI 심층 리포트 생성을 시작합니다.');
-        payBtn.classList.remove('opacity-75', 'pointer-events-none');
-        payBtn.innerHTML = `
-          <span class="material-symbols-outlined text-[18px] text-secondary-container">lock</span>
-          <span class="font-title-md text-title-md text-on-primary font-semibold">12,900원 결제하기</span>
-        `;
+        navigate('/report-loading');
       }, 1500);
     });
-  }, []);
+  }, [navigate]);
 
   return (
     <>

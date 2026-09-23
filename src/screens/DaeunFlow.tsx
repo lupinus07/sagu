@@ -2,20 +2,30 @@
  * 대운 흐름 분석 — imported from the Stitch export of "AI Saju Fortune App".
  * Markup mirrors .stitch/html/15_대운_흐름_분석_d9e223ce.html element for element; edit it here from now on.
  */
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
 export const BODY_CLASS =
   "bg-surface font-body-md text-on-surface flex flex-col min-h-screen";
 
+const NAV_TABS = [
+  { path: '/home', label: '홈', icon: 'home', fill: false, matches: ['/home'] },
+  { path: '/saved-saju', label: '내 사주', icon: 'calendar_view_week', fill: true, matches: ['/saved-saju', '/daeun-flow'] },
+  { path: '/ai-chat', label: 'AI 상담', icon: 'chat', fill: false, matches: ['/ai-chat'] },
+  { path: '/more', label: '더보기', icon: 'more_horiz', fill: false, matches: ['/more'] },
+] as const;
+
 export default function DaeunFlow() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
     <>
       <header className="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe">
         <div className="h-16 px-margin flex items-center justify-between">
           <div className="flex items-center gap-space-xs">
-            <button aria-label="뒤로가기" className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors text-on-surface" type="button">
+            <button aria-label="뒤로가기" className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors text-on-surface" onClick={() => history.back()} type="button">
               <span className="material-symbols-outlined text-[22px]">arrow_back</span>
             </button>
             <h1 className="font-headline-md text-headline-md text-on-surface tracking-tight ml-1">대운 흐름</h1>
@@ -510,7 +520,7 @@ export default function DaeunFlow() {
                   대운과 세운(1년 운)의 조화 심층 질문하기
                 </p>
               </div>
-              <button className="shrink-0 px-space-md py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-title-md text-title-md font-semibold hover:bg-secondary-fixed transition-colors flex items-center gap-1 shadow-sm" type="button">
+              <button className="shrink-0 px-space-md py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-title-md text-title-md font-semibold hover:bg-secondary-fixed transition-colors flex items-center gap-1 shadow-sm" onClick={() => navigate('/ai-chat')} type="button">
                 <span className="">질문하기</span>
                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
@@ -518,26 +528,24 @@ export default function DaeunFlow() {
           </section>
         </div>
       </main>
-      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]" data-active-classes="text-primary-container font-semibold">
+      <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]">
         <div className="flex justify-around items-center h-16 px-gutter">
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">
-            <span className="material-symbols-outlined text-[22px]">home</span>
-            <span className="font-label-sm text-label-sm mt-1">홈</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-primary-container font-semibold transition-colors" data-path="my-saju" href="#">
-            <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-              calendar_view_week
-            </span>
-            <span className="font-label-sm text-label-sm mt-1">내 사주</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="ai-chat" href="#">
-            <span className="material-symbols-outlined text-[22px]">chat</span>
-            <span className="font-label-sm text-label-sm mt-1">AI 상담</span>
-          </a>
-          <a className="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="more" href="#">
-            <span className="material-symbols-outlined text-[22px]">more_horiz</span>
-            <span className="font-label-sm text-label-sm mt-1">더보기</span>
-          </a>
+          {NAV_TABS.map((tab) => {
+            const active = (tab.matches as readonly string[]).includes(pathname);
+            return (
+              <Link
+                key={tab.path}
+                aria-current={active ? 'page' : undefined}
+                className={`flex flex-col items-center justify-center min-w-[56px] h-14 transition-colors ${active ? 'text-primary-container font-semibold' : 'text-on-surface-variant hover:text-on-surface'}`}
+                to={tab.path}
+              >
+                <span className="material-symbols-outlined text-[22px]" style={active && tab.fill ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+                  {tab.icon}
+                </span>
+                <span className="font-label-sm text-label-sm mt-1">{tab.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>

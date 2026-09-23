@@ -3,6 +3,7 @@
  * Markup mirrors .stitch/html/20_리포트_생성_중_fc3c573b.html element for element; edit it here from now on.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { byId } from '../lib/dom';
 import { useBodyClass } from '../lib/useBodyClass';
 
@@ -11,8 +12,11 @@ export const BODY_CLASS =
 
 export default function ReportLoading() {
   useBodyClass(BODY_CLASS);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const doneTimer = setTimeout(() => navigate('/report-career-move'), 2200);
+
     // Micro-interaction: Subtle incremental progress counter feeling alive
     const numEl = byId('progress-number');
     const barEl = byId('progress-bar-fill');
@@ -42,7 +46,8 @@ export default function ReportLoading() {
         }
       });
     }
-  }, []);
+    return () => clearTimeout(doneTimer);
+  }, [navigate]);
 
   return (
     <>
