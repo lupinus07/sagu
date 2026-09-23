@@ -1,0 +1,427 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&amp;family=Noto+Serif+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'error': '#ba1a1a', 'on-tertiary-container': '#539070', 'on-error': '#ffffff', 'inverse-surface': '#30312e', 'on-primary-fixed': '#131b2e', 'on-background': '#1b1c1a', 'surface-container-lowest': '#ffffff', 'on-error-container': '#93000a', 'surface-container-highest': '#e4e2de', 'primary': '#000000', 'on-tertiary-fixed-variant': '#0d5135', 'tertiary-fixed': '#b0f1cb', 'on-tertiary': '#ffffff', 'tertiary': '#000000', 'on-surface-variant': '#45464d', 'surface-container': '#efeeea', 'secondary-fixed': '#ffdea5', 'tertiary-fixed-dim': '#95d4b0', 'background': '#fbf9f5', 'on-primary-fixed-variant': '#3f465b', 'inverse-on-surface': '#f2f0ed', 'outline-variant': '#c6c6cd', 'on-primary-container': '#7c839b', 'on-secondary-fixed': '#261900', 'secondary-fixed-dim': '#e9c176', 'surface': '#fbf9f5', 'on-secondary-fixed-variant': '#5d4201', 'secondary': '#775a19', 'outline': '#76777d', 'on-secondary': '#ffffff', 'surface-container-low': '#f5f3ef', 'on-surface': '#1b1c1a', 'surface-container-high': '#eae8e4', 'surface-tint': '#565e74', 'surface-variant': '#e4e2de', 'secondary-container': '#fed488', 'primary-fixed-dim': '#bec6e0', 'surface-bright': '#fbf9f5', 'tertiary-container': '#002112', 'inverse-primary': '#bec6e0', 'primary-fixed': '#dae2fc', 'on-secondary-container': '#785a1a', 'on-primary': '#ffffff', 'on-tertiary-fixed': '#002112', 'error-container': '#ffdad6', 'surface-dim': '#dbdad6', 'primary-container': '#131b2e' }, borderRadius: { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, spacing: { 'gutter': '1rem', 'space-xl': '2.5rem', 'gutter-mobile': '0.75rem', 'space-lg': '1.5rem', 'space-sm': '0.5rem', 'margin-mobile': '1.25rem', 'margin': '1.5rem', 'space-xs': '0.25rem', 'space-md': '1rem' }, fontFamily: { 'headline-md': ['Noto Serif KR', 'Noto Serif'], 'label-md': ['Noto Sans KR', 'Noto Sans'], 'headline-lg-mobile': ['Noto Serif KR', 'Noto Serif'], 'label-sm': ['Noto Sans KR', 'Noto Sans'], 'body-lg': ['Noto Sans KR', 'Noto Sans'], 'headline-xl': ['Noto Serif KR', 'Noto Serif'], 'headline-xl-mobile': ['Noto Serif KR', 'Noto Serif'], 'body-sm': ['Noto Serif KR', 'Noto Serif'], 'title-md': ['Noto Sans KR', 'Noto Sans'], 'headline-lg': ['Noto Serif KR', 'Noto Serif'], 'title-lg': ['Noto Sans KR', 'Noto Sans'], 'body-md': ['Noto Sans KR', 'Noto Sans'], 'label-lg': ['Noto Sans KR', 'Noto Sans'] }, fontSize: { 'headline-md': ['20px', { lineHeight: '28px', fontWeight: '500' }], 'label-md': ['11px', { lineHeight: '16px', letterSpacing: '0.04em', fontWeight: '500' }], 'headline-lg-mobile': ['22px', { lineHeight: '32px', letterSpacing: '-0.01em', fontWeight: '500' }], 'label-sm': ['10px', { lineHeight: '14px', letterSpacing: '0.06em', fontWeight: '600' }], 'body-lg': ['16px', { lineHeight: '26px', fontWeight: '400' }], 'headline-xl': ['36px', { lineHeight: '48px', letterSpacing: '-0.02em', fontWeight: '600' }], 'headline-xl-mobile': ['28px', { lineHeight: '38px', letterSpacing: '-0.01em', fontWeight: '600' }], 'body-sm': ['13px', { lineHeight: '20px', fontWeight: '400' }], 'title-md': ['16px', { lineHeight: '24px', fontWeight: '600' }], 'headline-lg': ['28px', { lineHeight: '38px', letterSpacing: '-0.01em', fontWeight: '500' }], 'title-lg': ['18px', { lineHeight: '26px', fontWeight: '600' }], 'body-md': ['14px', { lineHeight: '22px', fontWeight: '400' }], 'label-lg': ['13px', { lineHeight: '18px', letterSpacing: '0.02em', fontWeight: '500' }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-xs"><button aria-label="뒤로가기" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors text-on-surface" type="button"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><h1 class="font-headline-md text-headline-md text-on-surface tracking-tight ml-1">대운 흐름</h1></div><div class="flex items-center gap-space-xs"><button aria-label="도움말 안내" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">help_outline</span></button><button aria-label="공유하기" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">share</span></button></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface"><div class="flex flex-col w-full">
+<!-- Subtle Top Ambient Texture -->
+<div class="relative w-full px-margin pt-space-md pb-space-xs">
+<!-- Breadcrumb & User Pillar Meta Header -->
+
+<!-- Personal Daewoon Cycle Badge Card -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-full bg-primary-container text-secondary-container flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">cyclone</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface truncate">김하늘 님</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">순행 2운</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant mt-0.5 truncate">
+            대운수 2 · 10년 주기 환경 변화
+          </p>
+</div>
+</div>
+<div class="text-right shrink-0 pl-space-xs">
+<span class="block font-label-sm text-label-sm text-secondary tracking-widest uppercase">CURRENT</span>
+<span class="font-title-md text-title-md text-primary-container font-semibold">32-41세</span>
+</div>
+</div>
+</div>
+<!-- SECTION 1: Luck Trajectory Line Graph -->
+<section class="px-margin mt-space-md">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">TRAJECTORY</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mt-0.5">평생 운세 흐름도</h2>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm font-medium">현재: 88점 (대도약기)</span>
+</div>
+</div>
+<!-- Graph Canvas Container (SVG) -->
+<div class="relative w-full mt-space-sm">
+<!-- SVG Chart -->
+<svg class="w-full h-44 overflow-visible" preserveAspectRatio="none" viewBox="0 0 360 170">
+<defs>
+<!-- Gradient for current era glow column -->
+<linearGradient id="currentColGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#fed488" stop-opacity="0.35"></stop>
+<stop offset="100%" stop-color="#fed488" stop-opacity="0.0"></stop>
+</linearGradient>
+<!-- Line Area Under Gradient -->
+<linearGradient id="chartLineGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#131B2E" stop-opacity="0.18"></stop>
+<stop offset="100%" stop-color="#131B2E" stop-opacity="0.0"></stop>
+</linearGradient>
+<!-- Active Point Aura Filter -->
+<filter height="200%" id="auraGlow" width="200%" x="-50%" y="-50%">
+<feDropShadow dx="0" dy="2" flood-color="#775a19" flood-opacity="0.35" stdDeviation="3"></feDropShadow>
+</filter>
+</defs>
+<!-- Subtle Horizontal Reference Grids -->
+<line stroke="#efeeea" stroke-dasharray="3 3" stroke-width="1" x1="20" x2="345" y1="35" y2="35"></line>
+<line stroke="#efeeea" stroke-dasharray="3 3" stroke-width="1" x1="20" x2="345" y1="80" y2="80"></line>
+<line stroke="#efeeea" stroke-dasharray="3 3" stroke-width="1" x1="20" x2="345" y1="125" y2="125"></line>
+<!-- Highlight Band for Current Period: Age 32 (x ~ 140 to 205) -->
+<rect fill="url(#currentColGrad)" height="120" rx="6" width="60" x="125" y="15"></rect>
+<!-- Area Under Curve -->
+<path d="M 30,118 
+                   C 65,115 75,95 95,90 
+                   C 115,85 130,48 155,42 
+                   C 185,35 195,25 218,22 
+                   C 245,20 260,60 280,68 
+                   C 305,76 325,82 335,85 
+                   L 335,135 L 30,135 Z" fill="url(#chartLineGrad)"></path>
+<!-- Main Fortune Trajectory Curve -->
+<path d="M 30,118 
+                   C 65,115 75,95 95,90 
+                   C 115,85 130,48 155,42 
+                   C 185,35 195,25 218,22 
+                   C 245,20 260,60 280,68 
+                   C 305,76 325,82 335,85" fill="none" stroke="#131B2E" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Milestone Nodes (Ages 12, 22, 32, 42, 52, 62) -->
+<!-- 12세: x=30, y=118 -->
+<circle cx="30" cy="118" fill="#ffffff" r="3.5" stroke="#76777d" stroke-width="2"></circle>
+<!-- 22세: x=95, y=90 -->
+<circle cx="95" cy="90" fill="#ffffff" r="3.5" stroke="#76777d" stroke-width="2"></circle>
+<!-- 32세 (CURRENT ACTIVE NODE): x=155, y=42 -->
+<circle class="animate-ping" cx="155" cy="42" fill="#fed488" fill-opacity="0.45" r="10"></circle>
+<circle cx="155" cy="42" fill="#131B2E" filter="url(#auraGlow)" r="6" stroke="#ffdea5" stroke-width="2.5"></circle>
+<circle cx="155" cy="42" fill="#ffffff" r="2"></circle>
+<!-- 42세: x=218, y=22 (Peak/Golden Era) -->
+<circle cx="218" cy="22" fill="#775a19" r="4.5" stroke="#fed488" stroke-width="1.5"></circle>
+<!-- 52세: x=280, y=68 -->
+<circle cx="280" cy="68" fill="#ffffff" r="3.5" stroke="#76777d" stroke-width="2"></circle>
+<!-- 62세: x=335, y=85 -->
+<circle cx="335" cy="85" fill="#ffffff" r="3.5" stroke="#76777d" stroke-width="2"></circle>
+<!-- Dynamic Callout Box on Current Active Node -->
+<g transform="translate(118, 5)">
+<rect fill="#131B2E" height="20" rx="4" width="74"></rect>
+<text fill="#ffdea5" font-family="Noto Sans" font-size="9" font-weight="600" text-anchor="middle" x="37" y="14">현재 대운 (88점)</text>
+</g>
+<!-- X-Axis Labels -->
+<text fill="#76777d" font-family="Noto Sans" font-size="10" text-anchor="middle" x="30" y="152">12세~</text>
+<text fill="#76777d" font-family="Noto Sans" font-size="10" text-anchor="middle" x="95" y="152">22세~</text>
+<text fill="#131B2E" font-family="Noto Sans" font-size="11" font-weight="700" text-anchor="middle" x="155" y="152">32세~</text>
+<text fill="#775a19" font-family="Noto Sans" font-size="10" font-weight="600" text-anchor="middle" x="218" y="152">42세~★</text>
+<text fill="#76777d" font-family="Noto Sans" font-size="10" text-anchor="middle" x="280" y="152">52세~</text>
+<text fill="#76777d" font-family="Noto Sans" font-size="10" text-anchor="middle" x="335" y="152">62세~</text>
+</svg>
+</div>
+<!-- Graph Insight Footer -->
+<div class="mt-space-xs pt-space-xs flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-secondary">trending_up</span>
+<span class="font-label-md text-label-md">32세 기점으로 상승곡선 진입 · 42세 경진대운 최정점</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">목화통명(木火通明)</span>
+</div>
+</div>
+</section>
+<!-- SECTION 2: Horizontal Scrollable 10-Year Timeline Pillars -->
+<section class="mt-space-lg w-full">
+<div class="px-margin flex items-baseline justify-between mb-space-xs">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">TIMELINE</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">10년 대운 주기 (大運干支)</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">좌우로 넘겨보기</span>
+</div>
+<!-- Scrollable Cards Ribbon -->
+<div class="flex gap-space-sm overflow-x-auto px-margin pt-space-xs pb-space-md snap-x scroll-smooth" style="scrollbar-width: none;">
+<!-- Pillar 1: 12~21세 丁丑 -->
+<button class="snap-start shrink-0 w-36 rounded-xl p-space-sm bg-surface-container-lowest text-left shadow-sm flex flex-col justify-between transition-transform active:scale-95" type="button">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">12 - 21세</span>
+<span class="font-label-sm text-label-sm text-outline">지남</span>
+</div>
+<!-- Ganji Tiles (Heavenly Stem / Earthly Branch) -->
+<div class="my-space-sm flex justify-center gap-1.5">
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #C84B31;">丁</span>
+<span class="font-label-sm text-label-sm text-outline">정화(火)</span>
+</div>
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #D99B26;">丑</span>
+<span class="font-label-sm text-label-sm text-outline">축토(土)</span>
+</div>
+</div>
+<div class="text-center">
+<span class="font-title-md text-title-md text-on-surface block">정축 (丁丑)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">식신 / 정재</span>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate block">학문 탐구기</span>
+</div>
+</button>
+<!-- Pillar 2: 22~31세 戊寅 -->
+<button class="snap-start shrink-0 w-36 rounded-xl p-space-sm bg-surface-container-lowest text-left shadow-sm flex flex-col justify-between transition-transform active:scale-95" type="button">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">22 - 31세</span>
+<span class="font-label-sm text-label-sm text-outline">지남</span>
+</div>
+<!-- Ganji Tiles -->
+<div class="my-space-sm flex justify-center gap-1.5">
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #D99B26;">戊</span>
+<span class="font-label-sm text-label-sm text-outline">무토(土)</span>
+</div>
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #3E7B5C;">寅</span>
+<span class="font-label-sm text-label-sm text-outline">인목(木)</span>
+</div>
+</div>
+<div class="text-center">
+<span class="font-title-md text-title-md text-on-surface block">무인 (戊寅)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">정관 / 비견</span>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate block">사회 입문·수련</span>
+</div>
+</button>
+<!-- Pillar 3: 32~41세 己卯 [ACTIVE - HIGHLIGHTED] -->
+<button class="snap-start shrink-0 w-40 rounded-xl p-space-sm bg-primary-container text-on-primary text-left shadow-md flex flex-col justify-between relative transition-transform active:scale-95" type="button">
+<!-- Celestial Active Dot -->
+<span class="absolute -top-1.5 -right-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold shadow-sm">
+          진행중 (3년차)
+        </span>
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-white/10 text-secondary-fixed">32 - 41세</span>
+<span class="font-label-sm text-label-sm text-secondary-container flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+              현재
+            </span>
+</div>
+<!-- Ganji Tiles with Gold Highlight -->
+<div class="my-space-sm flex justify-center gap-2">
+<div class="w-12 h-14 rounded-lg bg-white/10 flex flex-col items-center justify-center shadow-inner">
+<span class="font-headline-md text-headline-md leading-tight text-secondary-container">己</span>
+<span class="font-label-sm text-label-sm text-primary-fixed-dim">토(土)</span>
+</div>
+<div class="w-12 h-14 rounded-lg bg-white/10 flex flex-col items-center justify-center shadow-inner">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #95d4b0;">卯</span>
+<span class="font-label-sm text-label-sm text-primary-fixed-dim">목(木)</span>
+</div>
+</div>
+<div class="text-center">
+<span class="font-title-md text-title-md text-white block">기묘 (己卯)</span>
+<span class="font-label-sm text-label-sm text-secondary-fixed">상관 / 정인 조화</span>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs text-center bg-white/5 rounded-lg py-1">
+<span class="font-label-sm text-label-sm text-secondary-container font-medium block">도약 및 결실 시작</span>
+</div>
+</button>
+<!-- Pillar 4: 42~51세 庚辰 [NEXT GOLDEN ERA] -->
+<button class="snap-start shrink-0 w-36 rounded-xl p-space-sm bg-surface-container-lowest text-left shadow-sm flex flex-col justify-between transition-transform active:scale-95" type="button">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-secondary-container/40 text-on-secondary-container font-semibold">42 - 51세</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">황금기</span>
+</div>
+<!-- Ganji Tiles -->
+<div class="my-space-sm flex justify-center gap-1.5">
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #94A3B8;">庚</span>
+<span class="font-label-sm text-label-sm text-outline">경금(金)</span>
+</div>
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #D99B26;">辰</span>
+<span class="font-label-sm text-label-sm text-outline">진토(土)</span>
+</div>
+</div>
+<div class="text-center">
+<span class="font-title-md text-title-md text-on-surface block">경진 (庚辰)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">정재 / 겁재</span>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs text-center">
+<span class="font-label-sm text-label-sm text-secondary font-semibold truncate block">인생 최고 전성기</span>
+</div>
+</button>
+<!-- Pillar 5: 52~61세 辛巳 -->
+<button class="snap-start shrink-0 w-36 rounded-xl p-space-sm bg-surface-container-lowest text-left shadow-sm flex flex-col justify-between transition-transform active:scale-95" type="button">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">52 - 61세</span>
+<span class="font-label-sm text-label-sm text-outline">예정</span>
+</div>
+<div class="my-space-sm flex justify-center gap-1.5">
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #94A3B8;">辛</span>
+<span class="font-label-sm text-label-sm text-outline">신금(金)</span>
+</div>
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #C84B31;">巳</span>
+<span class="font-label-sm text-label-sm text-outline">사화(火)</span>
+</div>
+</div>
+<div class="text-center">
+<span class="font-title-md text-title-md text-on-surface block">신사 (辛巳)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">편재 / 정관</span>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate block">안정적 자산 완성</span>
+</div>
+</button>
+<!-- Pillar 6: 62~71세 壬午 -->
+<button class="snap-start shrink-0 w-36 rounded-xl p-space-sm bg-surface-container-lowest text-left shadow-sm flex flex-col justify-between transition-transform active:scale-95" type="button">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">62 - 71세</span>
+<span class="font-label-sm text-label-sm text-outline">예정</span>
+</div>
+<div class="my-space-sm flex justify-center gap-1.5">
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #1E293B;">壬</span>
+<span class="font-label-sm text-label-sm text-outline">임수(水)</span>
+</div>
+<div class="w-11 h-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md leading-tight" style="color: #C84B31;">午</span>
+<span class="font-label-sm text-label-sm text-outline">오화(火)</span>
+</div>
+</div>
+<div class="text-center">
+<span class="font-title-md text-title-md text-on-surface block">임오 (壬午)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">편관 / 편인</span>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate block">여유와 명예 전수</span>
+</div>
+</button>
+</div>
+</section>
+<!-- SECTION 3: In-Depth Saju Reading Card (Active: 己卯 대운) -->
+<section class="px-margin mt-space-sm mb-space-md">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<!-- Chapter Card Header -->
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+              현재 분석 중
+            </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+              2025 ~ 2034년 (만 32~41세)
+            </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">己卯(기묘) 대운 종합 심층 분석</h3>
+</div>
+<div class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+</div>
+<!-- Core Element Archetype Summary Box -->
+<div class="p-space-md rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary">eco</span>
+<span class="font-title-md text-title-md text-on-surface">대운의 본질: 윤토생목(潤土生木)</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          촉촉한 전답의 흙(己土)이 파릇한 봄나무(卯木)의 뿌리를 포근히 품어주는 형상입니다. 지난 10년간 쌓아온 내면의 씨앗과 무형의 재능이 비로소 사회적 결실과 실질적인 지위로 피어오르는 도약의 10년입니다.
+        </p>
+</div>
+<!-- 3 Key Focus Areas (Bento Column items) -->
+<div class="space-y-space-sm">
+<!-- 1) Career / Social Status -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm" style="color: #3E7B5C;">
+<span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">직업 · 사회운</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-medium">상승 궤도</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+              독자적 전문성을 인정받아 프로젝트의 핵심 주도권을 쥐게 됩니다. 남을 따르기보다 본인의 기획과 아이디어로 팀을 이끌어갈 때 가장 큰 운의 조력을 받습니다.
+            </p>
+</div>
+</div>
+<!-- 2) Wealth / Asset Building -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm" style="color: #D99B26;">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">재물 · 자산운</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container font-medium">문서화 추천</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+              단기 투기형 이익보다는 부동산, 지식재산권 등 안전한 '문서(印綬)' 형태로 자산을 묶어두는 것이 매우 유리합니다. 36세 전후로 실물 자산 취득 운이 강하게 들어옵니다.
+            </p>
+</div>
+</div>
+<!-- 3) Wellbeing / Mindset -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm" style="color: #565e74;">
+<span class="material-symbols-outlined text-[20px]">self_improvement</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">건강 · 마음가짐</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-medium">체력 안배</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+              성장 욕구가 강해질수록 간(木)과 소화기(土)의 피로가 누적될 수 있습니다. 규칙적인 산책과 명상으로 과도한 신경 예민을 완화하는 생활 습관이 필수적입니다.
+            </p>
+</div>
+</div>
+</div>
+<!-- Traditional Classic Quote / Callout Panel (적천수) -->
+<div class="relative p-space-md rounded-lg bg-surface-container-high overflow-hidden">
+<div class="flex items-center gap-space-xs mb-1.5 text-secondary">
+<span class="material-symbols-outlined text-[18px]">history_edu</span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase font-semibold">고전 명리 조언 · 적천수(適天髓)</span>
+</div>
+<blockquote class="font-headline-md text-headline-md text-on-surface italic leading-relaxed">
+          “묘목이 비옥한 토양을 만나 그 뿌리를 깊게 내리니, 조급해하지 않아도 시절의 인연은 저절로 피어난다.”
+        </blockquote>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+          눈앞의 성과를 서둘러 재촉하기보다, 기초를 단단히 다지는 사람에게 42세 대운의 거대한 영화(榮華)가 온전히 주어집니다.
+        </p>
+</div>
+</div>
+</section>
+<!-- SECTION 4: Contextual Interactive Action Prompts -->
+<section class="px-margin mb-space-lg">
+<div class="p-space-md rounded-xl bg-primary-container text-on-primary shadow-md flex items-center justify-between">
+<div class="min-w-0 pr-space-sm">
+<span class="font-label-sm text-label-sm text-secondary-container block mb-0.5">AI 맞춤 명리 상담</span>
+<h4 class="font-title-md text-title-md text-white truncate">현재 기묘 대운, 올해(乙巳년)는 어떨까?</h4>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mt-0.5 truncate">대운과 세운(1년 운)의 조화 심층 질문하기</p>
+</div>
+<button class="shrink-0 px-space-md py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-title-md text-title-md font-semibold hover:bg-secondary-fixed transition-colors flex items-center gap-1 shadow-sm" type="button">
+<span class="">질문하기</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</section>
+</div></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_16px_rgba(19,27,46,0.04)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-around items-center h-16 px-gutter"><a class="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-label-sm mt-1">홈</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-14 text-primary-container font-semibold transition-colors" data-path="my-saju" href="#"><span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">calendar_view_week</span><span class="font-label-sm text-label-sm mt-1">내 사주</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="ai-chat" href="#"><span class="material-symbols-outlined text-[22px]">chat</span><span class="font-label-sm text-label-sm mt-1">AI 상담</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-14 text-on-surface-variant hover:text-on-surface transition-colors" data-path="more" href="#"><span class="material-symbols-outlined text-[22px]">more_horiz</span><span class="font-label-sm text-label-sm mt-1">더보기</span></a></div></nav>
+
+
+
+
+
+</body></html>

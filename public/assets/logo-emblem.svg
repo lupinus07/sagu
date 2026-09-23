@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <circle cx="60" cy="60" r="54" stroke="#C5A059" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+  <circle cx="60" cy="60" r="46" stroke="#131B2E" stroke-width="1.5"/>
+  <!-- Central subtle Yin-Yang / Four Pillars orbital motif -->
+  <circle cx="60" cy="60" r="32" fill="#131B2E"/>
+  <circle cx="60" cy="60" r="31" stroke="#C5A059" stroke-width="1"/>
+  <!-- Constellation stars and celestial lines -->
+  <path d="M60 38 L60 82 M38 60 L82 60" stroke="#C5A059" stroke-width="1" stroke-linecap="round" opacity="0.75"/>
+  <circle cx="60" cy="46" r="3" fill="#3E7B5C"/> <!-- 목 Wood -->
+  <circle cx="74" cy="60" r="3" fill="#C84B31"/> <!-- 화 Fire -->
+  <circle cx="60" cy="74" r="3" fill="#D99B26"/> <!-- 토 Earth -->
+  <circle cx="46" cy="60" r="3" fill="#E2E8F0"/> <!-- 금 Metal -->
+  <circle cx="60" cy="60" r="4.5" fill="#C5A059"/> <!-- Central Pivot / Golden Core -->
+  <circle cx="60" cy="60" r="2" fill="#131B2E"/>
+  <!-- Delicate celestial ring dots -->
+  <circle cx="60" cy="14" r="2" fill="#C5A059"/>
+  <circle cx="106" cy="60" r="2" fill="#C5A059"/>
+  <circle cx="60" cy="106" r="2" fill="#C5A059"/>
+  <circle cx="14" cy="60" r="2" fill="#C5A059"/>
+</svg>
