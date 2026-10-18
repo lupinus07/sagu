@@ -1,0 +1,156 @@
+{
+  "year": {
+    "korean": "무진",
+    "hanja": "戊辰",
+    "stem": "무",
+    "branch": "진",
+    "stemElement": "土",
+    "branchElement": "土",
+    "tenGod": {
+      "stem": "겁재",
+      "branch": "겁재"
+    }
+  },
+  "month": {
+    "korean": "을묘",
+    "hanja": "乙卯",
+    "stem": "을",
+    "branch": "묘",
+    "stemElement": "木",
+    "branchElement": "木",
+    "tenGod": {
+      "stem": "편관",
+      "branch": "편관"
+    }
+  },
+  "day": {
+    "korean": "기사",
+    "hanja": "己巳",
+    "stem": "기",
+    "branch": "사",
+    "stemElement": "土",
+    "branchElement": "火",
+    "tenGod": {
+      "stem": "일간",
+      "branch": "정인"
+    }
+  },
+  "hour": {
+    "korean": "갑자",
+    "hanja": "甲子",
+    "stem": "갑",
+    "branch": "자",
+    "stemElement": "木",
+    "branchElement": "水",
+    "tenGod": {
+      "stem": "정관",
+      "branch": "편재"
+    }
+  },
+  "hasHourPillar": true,
+  "elementCounts": {
+    "木": 3,
+    "火": 1,
+    "土": 3,
+    "金": 0,
+    "水": 1
+  },
+  "voidBranches": [
+    "술",
+    "해"
+  ],
+  "luck": {
+    "forward": false,
+    "startAge": 3,
+    "pillars": [
+      {
+        "startAge": 3,
+        "endAge": 12,
+        "korean": "갑인",
+        "hanja": "甲寅",
+        "stemElement": "木",
+        "branchElement": "木"
+      },
+      {
+        "startAge": 13,
+        "endAge": 22,
+        "korean": "계축",
+        "hanja": "癸丑",
+        "stemElement": "水",
+        "branchElement": "土"
+      },
+      {
+        "startAge": 23,
+        "endAge": 32,
+        "korean": "임자",
+        "hanja": "壬子",
+        "stemElement": "水",
+        "branchElement": "水"
+      },
+      {
+        "startAge": 33,
+        "endAge": 42,
+        "korean": "신해",
+        "hanja": "辛亥",
+        "stemElement": "金",
+        "branchElement": "水"
+      },
+      {
+        "startAge": 43,
+        "endAge": 52,
+        "korean": "경술",
+        "hanja": "庚戌",
+        "stemElement": "金",
+        "branchElement": "土"
+      },
+      {
+        "startAge": 53,
+        "endAge": 62,
+        "korean": "기유",
+        "hanja": "己酉",
+        "stemElement": "土",
+        "branchElement": "金"
+      },
+      {
+        "startAge": 63,
+        "endAge": 72,
+        "korean": "무신",
+        "hanja": "戊申",
+        "stemElement": "土",
+        "branchElement": "金"
+      },
+      {
+        "startAge": 73,
+        "endAge": 82,
+        "korean": "정미",
+        "hanja": "丁未",
+        "stemElement": "火",
+        "branchElement": "土"
+      },
+      {
+        "startAge": 83,
+        "endAge": 92,
+        "korean": "병오",
+        "hanja": "丙午",
+        "stemElement": "火",
+        "branchElement": "火"
+      },
+      {
+        "startAge": 93,
+        "endAge": 102,
+        "korean": "을사",
+        "hanja": "乙巳",
+        "stemElement": "木",
+        "branchElement": "火"
+      }
+    ],
+    "current": {
+      "startAge": 33,
+      "endAge": 42,
+      "korean": "신해",
+      "hanja": "辛亥",
+      "stemElement": "金",
+      "branchElement": "水"
+    }
+  }
+}

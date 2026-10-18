@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────
+   디자인 토큰: 색 · 글자 크기는 여기서만 바꾼다.
+   화면 파일에는 px / #hex 를 직접 쓰지 않는다.
+   ─────────────────────────────────────────────── */
+:root {
+  /* 색 */
+  --background: #121212;
+  --card: #1a1a1a;
+  --border: #262626;
+  --gold: #f2b544;
+  --gold-bg: #262219;
+  --gold-bg-2: #2a2416;
+  --text: #d6d1c6;
+  --text-sub: #a8a39a;
+  --text-dim: #8e897f;
+  --text-heading: #f1ede4;
+  --caution: #e89a7a;
+  --caution-bg: #2a1f1b;
+  --caution-card: #1c1715;
+  --caution-line: #3a2a24;
+  --success-bg: #1b2a20;
+  --raised: #2c2c2c;
+  --sunken: #161616;
+  --chip-bg: #1f1f1f;
+  --disabled: #3a3326;
+  --bar-gold: #b58a3a;
+  --bar-dim: #6f6657;
+  --el-wood: #7fb98b;
+  --el-fire: #e07f66;
+  --el-earth: #d2ae63;
+  --el-metal: #c4c8cc;
+  --el-water: #6e9fe0;
+
+  /* 글자 크기 (큰 글씨 모드는 이 값만 덮어쓰면 된다) */
+  --fs-micro: 11.5px;
+  --fs-caption: 12.5px;
+  --fs-small: 13px;
+  --fs-body: 14.5px;
+  --fs-lead: 16px;
+  --fs-conclusion: 18px;
+  --fs-screen: 19px;
+  --fs-section: 20px;
+  --fs-h2: 24px;
+  --fs-h1: 28px;
+  --fs-hero: 40px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-line: var(--border);
+  --color-gold: var(--gold);
+  --color-gold-bg: var(--gold-bg);
+  --color-gold-bg2: var(--gold-bg-2);
+  --color-text: var(--text);
+  --color-sub: var(--text-sub);
+  --color-dim: var(--text-dim);
+  --color-heading: var(--text-heading);
+  --color-caution: var(--caution);
+  --color-caution-bg: var(--caution-bg);
+  --color-caution-card: var(--caution-card);
+  --color-caution-line: var(--caution-line);
+  --color-success-bg: var(--success-bg);
+  --color-raised: var(--raised);
+  --color-sunken: var(--sunken);
+  --color-chip: var(--chip-bg);
+  --color-disabled: var(--disabled);
+  --color-bar-gold: var(--bar-gold);
+  --color-bar-dim: var(--bar-dim);
+  --color-wood: var(--el-wood);
+  --color-fire: var(--el-fire);
+  --color-earth: var(--el-earth);
+  --color-metal: var(--el-metal);
+  --color-water: var(--el-water);
+  --font-sans: var(--font-noto-sans-kr), sans-serif;
+  --font-serif: var(--font-gowun-batang), serif;
+  --radius-card: 18px;
+  --radius-btn: 14px;
+
+  --text-micro: var(--fs-micro);
+  --text-caption: var(--fs-caption);
+  --text-small: var(--fs-small);
+  --text-body: var(--fs-body);
+  --text-lead: var(--fs-lead);
+  --text-conclusion: var(--fs-conclusion);
+  --text-screen: var(--fs-screen);
+  --text-section: var(--fs-section);
+  --text-h2: var(--fs-h2);
+  --text-h1: var(--fs-h1);
+  --text-hero: var(--fs-hero);
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-noto-sans-kr), sans-serif;
+  font-size: var(--fs-body);
+}
+
+/* ───────────── 공통 모양 (클래스로만 사용) ───────────── */
+@layer components {
+  .card {
+    @apply rounded-card border border-line bg-card;
+  }
+  .chip {
+    @apply rounded-lg border border-line bg-chip px-3 py-[5px] text-small text-text;
+  }
+  .chip-gold {
+    @apply rounded-full border border-gold/30 bg-gold-bg px-3 py-[5px] text-small text-gold;
+  }
+  .btn-primary {
+    @apply flex items-center justify-center rounded-btn bg-gold font-bold text-background;
+  }
+  .btn-primary:disabled,
+  .btn-primary[aria-disabled="true"] {
+    @apply bg-disabled text-dim;
+  }
+  .btn-outline {
+    @apply flex items-center justify-center rounded-btn border border-line font-bold text-heading;
+  }
+  .advice-box {
+    @apply flex gap-3 rounded-2xl bg-gold-bg2 p-4;
+  }
+  .sheet-title {
+    @apply font-serif text-section text-heading;
+  }
+  .conclusion {
+    @apply whitespace-pre-line font-serif text-conclusion leading-snug text-gold;
+  }
+  .body-text {
+    @apply text-body leading-[1.75];
+  }
+  .label-text {
+    @apply text-body font-bold;
+  }
+  .caption-text {
+    @apply text-caption text-dim;
+  }
+}

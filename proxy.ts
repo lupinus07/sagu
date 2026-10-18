@@ -1,0 +1,39 @@
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/env";
+
+// 로그인해야 볼 수 있는 화면 (내 풀이, 내정보 하위: 결제 내역·탈퇴 등). /my 자체는 비로그인도 볼 수 있다.
+const PROTECTED = ["/my/", "/readings", "/checkout"];
+const isProtected = (path: string) => PROTECTED.some((p) => path.startsWith(p));
+
+// 요청마다 Supabase 세션 쿠키(토큰)를 갱신하고, 로그인이 필요한 화면은 로그인 페이지로 보낸다.
+export async function proxy(request: NextRequest) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return NextResponse.next();
+
+  let response = NextResponse.next({ request });
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_KEY, {
+    cookies: {
+      getAll: () => request.cookies.getAll(),
+      setAll: (list) => {
+        list.forEach(({ name, value }) => request.cookies.set(name, value));
+        response = NextResponse.next({ request });
+        list.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+      },
+    },
+  });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname, search } = request.nextUrl;
+  if (!user && isProtected(pathname)) {
+    const login = new URL("/login", request.url);
+    login.searchParams.set("next", pathname + search);
+    return NextResponse.redirect(login);
+  }
+  return response;
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|webp|ico)$).*)"],
+};
