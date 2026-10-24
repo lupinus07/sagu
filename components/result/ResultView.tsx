@@ -4,6 +4,7 @@ import { ChevronIcon } from "@/components/ui/Icons";
 import { STATUS_LABELS } from "@/lib/labels";
 import type { Block, ResultDoc, Row } from "@/lib/ai/schemas";
 import { ChartCard } from "./ChartCard";
+import { ChartReadingCards } from "./ChartReadingCards";
 import { ResultShell } from "./ResultShell";
 import { TimingChart } from "./TimingChart";
 import { VerdictCard } from "./VerdictCard";
@@ -328,6 +329,7 @@ export function ResultView({ doc }: { doc: ResultDoc }) {
         summary={reading.chartNote || undefined}
         elementNames
       />
+      <ChartReadingCards chart={doc.chart} product={doc.product} />
       {reading.blocks.map((b, i) => (
         <BlockView key={i} block={b} />
       ))}

@@ -21,6 +21,9 @@ export const InputValueSchema = z.object({
   yaJasi: z.boolean(),
 });
 
+/** 사주 원국 계산에 필요한 값만 (상황·이름은 제외) */
+export const ChartInputSchema = InputValueSchema.omit({ status: true, name: true });
+
 const DraftSchema = z.object({
   product: z.enum(["career", "money"]),
   input: InputValueSchema,

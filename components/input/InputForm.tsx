@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LoginSheet } from "@/components/login/LoginSheet";
 import { CheckIcon, CloseIcon } from "@/components/ui/Icons";
 import type { Status } from "@/lib/ai/schemas";
 import type { InputValue, Product } from "@/lib/demoStore";
 import { saveDraft } from "@/lib/draft";
 import { deleteSavedInput, listSavedInputs, savedLabel, type SavedInput } from "@/lib/sajuInputs";
-import { createClient } from "@/lib/supabase/client";
 
 const STATUSES: { id: Status; label: string }[] = [
   { id: "employed", label: "재직 중" },
@@ -68,20 +66,9 @@ const YEARS = Array.from({ length: THIS_YEAR - 1930 + 1 }, (_, i) => THIS_YEAR -
 const selectCls =
   "h-11 w-full rounded-btn border border-line bg-card px-3 text-body text-text outline-none focus:border-gold";
 
-async function isLoggedIn() {
-  try {
-    const { data } = await createClient().auth.getUser();
-    return !!data.user;
-  } catch {
-    return false;
-  }
-}
-
 export function InputForm({ product }: { product: Product }) {
   const router = useRouter();
   const draftNotice = useSearchParams().get("notice") === "draft";
-  const [sheet, setSheet] = useState(false);
-  const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<Status | null>("employed");
   const [name, setName] = useState("");
   const [gender, setGender] = useState<"female" | "male" | null>(null);
@@ -129,8 +116,8 @@ export function InputForm({ product }: { product: Product }) {
   const needStatus = product === "career";
   const valid = (!needStatus || status !== null) && gender !== null;
 
-  async function submit() {
-    if (!valid || busy) return;
+  function submit() {
+    if (!valid) return;
     const sj = SHIJIN.find((s) => s.value === time);
     // 야자시 적용 시 자시는 23:30~24:00 쪽(당일 일간 기준)으로 계산
     const [h, m] = !sj ? [null, 0] : sj.value === "0" && yaJasi ? [23, 45] : [sj.hour, sj.minute];
@@ -147,13 +134,9 @@ export function InputForm({ product }: { product: Product }) {
       minute: m ?? 0,
       yaJasi,
     };
-    // 로그인 · 약관 동의를 거쳐 돌아와도 이어지도록 입력값을 먼저 보관한다 (1시간)
+    // 사주 원국 · 로그인 · 결제를 거쳐도 이어지도록 입력값을 먼저 보관한다 (1시간)
     saveDraft(product, value);
-    setBusy(true);
-    const loggedIn = await isLoggedIn();
-    setBusy(false);
-    if (loggedIn) router.push("/checkout");
-    else setSheet(true);
+    router.push("/chart");
   }
 
   return (
@@ -343,18 +326,18 @@ export function InputForm({ product }: { product: Product }) {
           ))}
         </ul>
         <p className="mt-4 border-t border-line pt-4 text-caption text-sub">
-          결제 후 내 풀이에서 언제든 다시 볼 수 있어요
+          사주 원국은 무료로 먼저 보여드려요. 자세한 풀이는 990원이에요
         </p>
       </section>
 
       <div>
         <button
           type="button"
-          disabled={!valid || busy}
+          disabled={!valid}
           onClick={submit}
           className="btn-primary h-[52px] w-full text-lead"
         >
-          990원 결제하고 풀이 받기
+          무료 풀이 받기
         </button>
         <p className="mt-4 text-center text-body text-sub">
           어떤 풀이를 받나요?{" "}
@@ -363,7 +346,6 @@ export function InputForm({ product }: { product: Product }) {
           </Link>
         </p>
       </div>
-      {sheet && <LoginSheet next="/checkout" onClose={() => setSheet(false)} />}
     </div>
   );
 }

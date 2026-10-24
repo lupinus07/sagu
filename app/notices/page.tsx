@@ -1,10 +1,10 @@
 import { PageHeader } from "@/components/ui/PageHeader";
-import { DONATION_PER_READING } from "@/lib/donation";
+import { DONATION_PER_READING, SHOW_DONATION } from "@/lib/donation";
 
 type Notice = { id: string; title: string; date: string; body: string[] };
 
 // 새 공지는 배열 맨 위에 추가한다. 기부 내역(분기별)도 여기에 올린다.
-const NOTICES: Notice[] = [
+const ALL_NOTICES: Notice[] = [
   {
     id: "donation",
     title: `풀이 1건마다 ${DONATION_PER_READING}원을 기부해요`,
@@ -18,6 +18,8 @@ const NOTICES: Notice[] = [
     ],
   },
 ];
+
+const NOTICES = ALL_NOTICES.filter((n) => SHOW_DONATION || n.id !== "donation");
 
 export default function NoticesPage() {
   return (

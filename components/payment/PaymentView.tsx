@@ -5,7 +5,7 @@ import { useState } from "react";
 import { CheckIcon } from "@/components/ui/Icons";
 import { PageHeader } from "@/components/ui/PageHeader";
 import type { InputValue, Product } from "@/lib/demoStore";
-import { DONATION_PER_READING } from "@/lib/donation";
+import { DONATION_PER_READING, SHOW_DONATION } from "@/lib/donation";
 import { STATUS_NAMES } from "@/lib/labels";
 
 const PRODUCT = {
@@ -117,12 +117,14 @@ export function PaymentView({
           <p className="mt-1 text-right text-small text-dim">부가세 포함</p>
         </section>
 
+        {SHOW_DONATION && (
         <p className="px-1 text-small leading-[1.7] text-sub">
           이 결제 중 <b className="text-gold">{DONATION_PER_READING}원</b>은 기부돼요. 환불되면 그 건의 기부는 빠져요.{" "}
           <Link href="/notices" className="text-gold underline underline-offset-2">
             기부 안내
           </Link>
         </p>
+        )}
 
         <div className="space-y-5 px-1 pt-2 text-body">
           <Check checked={agree1} onChange={setAgree1}>

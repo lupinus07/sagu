@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HeroEmblem } from "@/components/home/HeroEmblem";
-import { DONATION_PER_READING } from "@/lib/donation";
+import { DONATION_PER_READING, SHOW_DONATION } from "@/lib/donation";
 
 type Product = {
   id: string;
@@ -75,6 +75,7 @@ export default function HomePage() {
             사주는 정해진 운명이 아니라, 내가 타고난 고유한 결입니다. 거스르지 않고 내 흐름을 바르게 마주할 때
             비로소 삶은 깊어집니다.
           </p>
+          {SHOW_DONATION && (
           <Link
             href="/notices"
             className="mx-auto mt-6 block max-w-[330px] rounded-2xl border border-gold/25 bg-gold-bg px-4 py-3.5 text-small leading-[1.7] text-gold"
@@ -84,6 +85,7 @@ export default function HomePage() {
               풀이 1건마다 {DONATION_PER_READING}원을 기부해요 · 자세히 보기 →
             </span>
           </Link>
+          )}
         </section>
 
         <section className="px-5 pb-8">

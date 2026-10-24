@@ -4,7 +4,10 @@ import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/env";
 
 // 로그인해야 볼 수 있는 화면 (내 풀이, 내정보 하위: 결제 내역·탈퇴 등). /my 자체는 비로그인도 볼 수 있다.
 const PROTECTED = ["/my/", "/readings", "/checkout"];
-const isProtected = (path: string) => PROTECTED.some((p) => path.startsWith(p));
+const isProtected = (path: string, search: string) =>
+  // 비회원 결제(/checkout?guest=1)는 로그인 없이 진입한다
+  !(path === "/checkout" && new URLSearchParams(search).get("guest") === "1") &&
+  PROTECTED.some((p) => path.startsWith(p));
 
 // 요청마다 Supabase 세션 쿠키(토큰)를 갱신하고, 로그인이 필요한 화면은 로그인 페이지로 보낸다.
 export async function proxy(request: NextRequest) {
@@ -26,7 +29,7 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname, search } = request.nextUrl;
-  if (!user && isProtected(pathname)) {
+  if (!user && isProtected(pathname, search)) {
     const login = new URL("/login", request.url);
     login.searchParams.set("next", pathname + search);
     return NextResponse.redirect(login);

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { InfoIcon } from "@/components/ui/Icons";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { DONATION_PER_READING } from "@/lib/donation";
+import { DONATION_PER_READING, SHOW_DONATION } from "@/lib/donation";
 
 /** 결과 공통 틀: 헤더 · 샘플 배지 · 프로필 · 마무리 인용 · (샘플) 하단 고정 버튼 */
 export function ResultShell({
@@ -56,7 +56,7 @@ export function ResultShell({
               <button className="min-h-11 rounded-btn border border-line px-5">공유</button>
             </div>
           )}
-          {!isSample && (
+          {SHOW_DONATION && !isSample && (
             <p className="mt-6 text-small leading-[1.7] text-sub">
               이 풀이와 함께 <b className="text-gold">{DONATION_PER_READING}원</b>이 기부돼요.
               <br />
