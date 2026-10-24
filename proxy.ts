@@ -24,9 +24,9 @@ export async function proxy(request: NextRequest) {
       },
     },
   });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims는 JWT 서명을 로컬에서 검증하므로 요청마다 Supabase 서버를 왕복하지 않는다 (만료되면 갱신).
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims ?? null;
 
   const { pathname, search } = request.nextUrl;
   if (!user && isProtected(pathname, search)) {

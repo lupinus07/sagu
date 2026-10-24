@@ -12,13 +12,10 @@ export async function GET(request: NextRequest) {
   if (!code) return fail();
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (error) return fail();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return fail();
+  // 세션 교환 응답에 사용자 정보가 들어 있어 getUser를 다시 부르지 않는다
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+  const user = data?.user;
+  if (error || !user) return fail();
 
   const { data: profile } = await supabase
     .from("profiles")

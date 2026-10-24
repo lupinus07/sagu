@@ -126,10 +126,9 @@ async function MyBody() {
   await connection();
   let loggedIn = false;
   if (SUPABASE_URL && SUPABASE_KEY) {
-    const {
-      data: { user },
-    } = await (await createClient()).auth.getUser();
-    loggedIn = !!user;
+    // JWT를 로컬에서 검증하므로 Supabase 서버 왕복이 없다
+    const { data } = await (await createClient()).auth.getClaims();
+    loggedIn = !!data?.claims;
   }
   return loggedIn ? <MemberView /> : <GuestView />;
 }
