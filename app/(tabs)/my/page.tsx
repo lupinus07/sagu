@@ -46,7 +46,7 @@ function SignOutRow() {
 }
 
 // 계정 · 결제 연동 전이라 화면용 예시 값이다 (5~6단계에서 실제 데이터로 교체)
-function MemberView() {
+function MemberView({ paidCount }: { paidCount: number }) {
   return (
     <div className="space-y-5 px-4 pt-5">
       <div className="flex items-center gap-4 px-1">
@@ -63,7 +63,7 @@ function MemberView() {
       </div>
 
       <Group>
-        <Row href="/my/payments" label="결제 내역" value="2건" />
+        <Row href="/my/payments" label="결제 내역" value={paidCount > 0 ? `${paidCount}건` : undefined} />
       </Group>
 
       <Group title="고객 지원">
@@ -124,13 +124,17 @@ function GuestView() {
 async function MyBody() {
   // 요청 시점에 렌더링한다. 세션 확인 중 쓰이는 현재 시각(Date.now)이 미리 렌더링에 섞이지 않게 먼저 막는다.
   await connection();
-  let loggedIn = false;
-  if (SUPABASE_URL && SUPABASE_KEY) {
-    // JWT를 로컬에서 검증하므로 Supabase 서버 왕복이 없다
-    const { data } = await (await createClient()).auth.getClaims();
-    loggedIn = !!data?.claims;
-  }
-  return loggedIn ? <MemberView /> : <GuestView />;
+  if (!SUPABASE_URL || !SUPABASE_KEY) return <GuestView />;
+  const supabase = await createClient();
+  // JWT를 로컬에서 검증하므로 Supabase 서버 왕복이 없다
+  const { data } = await supabase.auth.getClaims();
+  if (!data?.claims) return <GuestView />;
+  // 결제 완료 건수 (RLS 로 본인 주문만 센다)
+  const { count } = await supabase
+    .from("orders")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "PAID");
+  return <MemberView paidCount={count ?? 0} />;
 }
 
 export default function MyPage() {
