@@ -4,6 +4,8 @@ import { z } from "zod";
 import type { InputValue, Product } from "@/lib/demoStore";
 
 export const DRAFT_KEY = "gyeol:draft";
+/** 무료 풀이에서 로그인을 거쳐 결제 화면으로 가는 중임을 표시 (sessionStorage) */
+export const FROM_LOGIN_KEY = "gyeol:fromLogin";
 export const DRAFT_TTL_MS = 60 * 60 * 1000;
 
 /** 입력 화면의 값. 임시 보관(draft)과 이전 입력 저장(API)이 같은 검증을 쓴다. */

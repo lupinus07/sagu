@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { createClient } from "@/lib/supabase/server";
 
 type Order = {
   at: string;
@@ -7,22 +10,41 @@ type Order = {
   amount: number;
   status: "paid" | "refunded";
   href: string;
+  who: string;
 };
 
-// 결제 연동 전이라 화면용 예시 값이다 (6단계에서 orders 테이블로 교체)
-const ORDERS: Order[] = [
-  { at: "2026.10.12 21:40", product: "금전 · 재물운", amount: 990, status: "paid", href: "/sample/money" },
-  { at: "2026.10.10 08:15", product: "이직 · 직업운", amount: 990, status: "paid", href: "/sample/career" },
-  { at: "2026.10.09 23:02", product: "이직 · 직업운", amount: 990, status: "refunded", href: "" },
-];
+const NAME: Record<string, string> = { career: "이직 · 직업운", money: "금전 · 재물운" };
+const pad = (n: number) => String(n).padStart(2, "0");
+const fmt = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
-export default function PaymentsPage() {
+async function PaymentsBody() {
+  await connection();
+  // RLS(orders_select_own)가 본인 주문만 돌려준다. 실제로 승인된 주문(결제 완료 · 환불)만 보여 준다.
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("orders")
+    .select("id, product, amount, status, birth_input, approved_at, created_at")
+    .in("status", ["PAID", "REFUNDED"])
+    .order("created_at", { ascending: false });
+  const ORDERS: Order[] = (data ?? []).map((o) => {
+    const i = o.birth_input as { name?: string; year: number; month: number; day: number };
+    return {
+      at: fmt(o.approved_at ?? o.created_at),
+      product: NAME[o.product] ?? o.product,
+      amount: o.amount,
+      status: o.status === "REFUNDED" ? "refunded" : "paid",
+      href: `/result/${o.id}`,
+      who: `${i.name?.trim() || "나"} · ${i.year}.${pad(i.month)}.${pad(i.day)}`,
+    };
+  });
   const paid = ORDERS.filter((o) => o.status === "paid");
   const total = paid.reduce((s, o) => s + o.amount, 0);
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[430px] pb-12">
-      <PageHeader title="결제 내역" back="/my" />
+    <>
       <main className="px-4 pt-5">
         <div className="flex items-center justify-between px-1">
           <p className="text-body text-sub">총 {paid.length}건</p>
@@ -33,7 +55,7 @@ export default function PaymentsPage() {
           {ORDERS.map((o) => {
             const refunded = o.status === "refunded";
             return (
-              <li key={o.at} className="card p-4">
+              <li key={o.href} className="card p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-small text-dim">{o.at}</span>
                   <span
@@ -50,7 +72,7 @@ export default function PaymentsPage() {
                     {o.amount.toLocaleString()}원
                   </span>
                 </div>
-                <p className="mt-1.5 text-small text-sub">정유리 · 1988.03.15</p>
+                <p className="mt-1.5 text-small text-sub">{o.who}</p>
                 {refunded ? (
                   <p className="mt-3 rounded-xl bg-sunken p-3 text-small leading-[1.6] text-sub">
                     풀이를 만드는 중 문제가 생겨 자동으로 환불됐어요. 결제 수단으로 3~5영업일 안에 돌아가요.
@@ -63,7 +85,13 @@ export default function PaymentsPage() {
                     >
                       풀이 보기
                     </Link>
-                    <button className="h-11 rounded-btn border border-line text-body text-heading">영수증</button>
+                    <Link
+                      href="/my/payments"
+                      aria-disabled
+                      className="pointer-events-none flex h-11 items-center justify-center rounded-btn border border-line text-body text-dim"
+                    >
+                      영수증 (카드사 앱에서 확인)
+                    </Link>
                   </div>
                 )}
               </li>
@@ -77,6 +105,17 @@ export default function PaymentsPage() {
         </ul>
         <button className="mt-4 min-h-11 px-1 text-body text-gold">결제 문의하기 →</button>
       </main>
+    </>
+  );
+}
+
+export default function PaymentsPage() {
+  return (
+    <div className="mx-auto min-h-screen w-full max-w-[430px] pb-12">
+      <PageHeader title="결제 내역" back="/my" />
+      <Suspense>
+        <PaymentsBody />
+      </Suspense>
     </div>
   );
 }

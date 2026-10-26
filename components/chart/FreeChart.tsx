@@ -7,7 +7,7 @@ import { LoginSheet } from "@/components/login/LoginSheet";
 import { ChartCard } from "@/components/result/ChartCard";
 import { ChartReadingCards } from "@/components/result/ChartReadingCards";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { clearDraft, isExpired, parseDraft, readDraftRaw } from "@/lib/draft";
+import { clearDraft, FROM_LOGIN_KEY, isExpired, parseDraft, readDraftRaw } from "@/lib/draft";
 import type { SajuChart } from "@/lib/saju/calculateSaju";
 import { createClient } from "@/lib/supabase/client";
 
@@ -70,7 +70,15 @@ export function FreeChart() {
     const loggedIn = await isLoggedIn();
     setBusy(false);
     if (loggedIn) router.push("/checkout");
-    else setSheet(true);
+    else {
+      // 로그인(카카오 · 약관)을 거쳐 결제 화면에 돌아오면 뒤로가기를 이 화면으로 되돌리기 위한 표시
+      try {
+        sessionStorage.setItem(FROM_LOGIN_KEY, "1");
+      } catch {
+        /* 저장 불가 환경이면 뒤로가기가 로그인 화면을 거칠 뿐이다 */
+      }
+      setSheet(true);
+    }
   }
 
   return (

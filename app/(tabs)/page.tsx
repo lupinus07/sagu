@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeroEmblem } from "@/components/home/HeroEmblem";
+import { BusinessInfo } from "@/components/ui/BusinessInfo";
 import { DONATION_PER_READING, SHOW_DONATION } from "@/lib/donation";
 
 type Product = {
@@ -118,6 +119,7 @@ export default function HomePage() {
           </figure>
         </section>
       </main>
+      <BusinessInfo />
     </>
   );
 }
