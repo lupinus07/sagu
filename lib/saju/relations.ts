@@ -46,11 +46,12 @@ const GOD_WEIGHT: Record<Product, Record<TenGod, number>> = {
 const STEM_HAP = [[0, 5], [1, 6], [2, 7], [3, 8], [4, 9]];
 const STEM_CHUNG = [[0, 6], [1, 7], [2, 8], [3, 9]];
 const BRANCH_YUKHAP = [[0, 1], [2, 11], [3, 10], [4, 9], [5, 8], [6, 7]];
+// el: 국의 오행 (木0 火1 土2 金3 水4)
 const SAMHAP = [
-  { b: [8, 0, 4], name: "申子辰(신자진) 水局(수국)" },
-  { b: [11, 3, 7], name: "亥卯未(해묘미) 木局(목국)" },
-  { b: [2, 6, 10], name: "寅午戌(인오술) 火局(화국)" },
-  { b: [5, 9, 1], name: "巳酉丑(사유축) 金局(금국)" },
+  { b: [8, 0, 4], el: 4, name: "申子辰(신자진) 水局(수국)" },
+  { b: [11, 3, 7], el: 0, name: "亥卯未(해묘미) 木局(목국)" },
+  { b: [2, 6, 10], el: 1, name: "寅午戌(인오술) 火局(화국)" },
+  { b: [5, 9, 1], el: 3, name: "巳酉丑(사유축) 金局(금국)" },
 ];
 
 const has = (pairs: number[][], a: number, b: number) =>
@@ -91,7 +92,7 @@ function stemHits(inc: number, base: Slot[]): Hit[] {
   return hits;
 }
 
-function branchHits(inc: number, base: Slot[]): Hit[] {
+function branchHits(inc: number, base: Slot[], dm: number, product: Product): Hit[] {
   const hits: Hit[] = [];
   for (const s of base) {
     const pair = `${BRANCH_H[Math.min(inc, s.branch)]}${BRANCH_H[Math.max(inc, s.branch)]}`;
@@ -110,7 +111,13 @@ function branchHits(inc: number, base: Slot[]): Hit[] {
     if (!g.b.includes(inc)) continue;
     const others = g.b.filter((x) => x !== inc);
     const n = others.filter((x) => present.has(x)).length;
-    if (n === 2) hits.push({ text: `${g.name} 완성`, weight: 14 });
+    // 국의 오행이 일간에게 어떤 십신 무리인지(이 상품에 얼마나 도움이 되는지)를 가중치에 반영한다
+    const w = GOD_WEIGHT[product];
+    const groupWeight = (() => {
+      const gods = [0, 1].map((k) => tenGod(dm, g.el * 2 + k));
+      return (w[gods[0]] + w[gods[1]]) / 2;
+    })();
+    if (n === 2) hits.push({ text: `${g.name} 완성`, weight: Math.round(10 + groupWeight) });
     else if (n === 1) {
       const mate = others.find((x) => present.has(x))!;
       hits.push({ text: `${branchLabel(inc)}·${branchLabel(mate)} 반합(半合, ${g.name})`, weight: 5 });
@@ -147,7 +154,7 @@ export function pillarFact(
   const sGod = tenGod(dm, stem);
   const bGod = tenGod(dm, BRANCH_MAIN_STEM[branch]);
   const sh = stemHits(stem, base);
-  const bh = branchHits(branch, base);
+  const bh = branchHits(branch, base, dm, product);
   const w = GOD_WEIGHT[product];
   return {
     ganjiHanja: ganjiHanja(stem, branch),
@@ -155,7 +162,8 @@ export function pillarFact(
     stemGod: sGod,
     branchGod: bGod,
     relations: [...sh, ...bh].map((h) => h.text),
-    stemScore: clamp(50 + w[sGod] + sh.reduce((a, h) => a + h.weight, 0)),
+    // 지지의 합충 · 국은 그해 전체의 큰 사건이라 상반기(천간) 점수에도 절반을 반영한다
+    stemScore: clamp(50 + w[sGod] + sh.reduce((a, h) => a + h.weight, 0) + 0.5 * bh.reduce((a, h) => a + h.weight, 0)),
     branchScore: clamp(50 + w[bGod] + bh.reduce((a, h) => a + h.weight, 0)),
   };
 }
@@ -238,8 +246,10 @@ export function luckFacts(chart: SajuChart, product: Product): LuckFact[] {
 export type ScorePoint = { label: string; score: number; peak?: boolean };
 
 const markPeak = (points: ScorePoint[]) => {
+  // 최고점이 같으면 더 이른 구간 하나만 정점으로 표시한다
   const top = Math.max(...points.map((p) => p.score));
-  return points.map((p) => (p.score === top ? { ...p, peak: true } : p));
+  const first = points.findIndex((p) => p.score === top);
+  return points.map((p, i) => (i === first ? { ...p, peak: true } : p));
 };
 
 /** 이직 그래프: 지금 반기부터 5개 구간 (천간=상반기, 지지=하반기) */

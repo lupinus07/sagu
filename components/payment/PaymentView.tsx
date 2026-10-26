@@ -74,7 +74,7 @@ export function PaymentView({
 
   return (
     <div className="mx-auto w-full max-w-[430px] pb-10">
-      <PageHeader title="결제하기" back="/chart" />
+      <PageHeader title="결제하기" back="/chart" history />
       <main className="space-y-4 px-4 pt-6">
         <section className="card p-5">
           <div className="flex items-center gap-3">

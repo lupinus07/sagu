@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { InfoIcon } from "@/components/ui/Icons";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { ResultActions, type ShareInfo } from "./ResultActions";
 import { DONATION_PER_READING, SHOW_DONATION } from "@/lib/donation";
 
 /** 결과 공통 틀: 헤더 · 샘플 배지 · 프로필 · 마무리 인용 · (샘플) 하단 고정 버튼 */
@@ -10,6 +11,7 @@ export function ResultShell({
   isSample,
   profile,
   closingQuote,
+  share,
   children,
 }: {
   title: string;
@@ -17,11 +19,16 @@ export function ResultShell({
   isSample: boolean;
   profile: { name: string; summary: string };
   closingQuote: string;
+  /** 있으면 저장(PDF) · 공유 버튼을 보여 준다 */
+  share?: ShareInfo;
   children: React.ReactNode;
 }) {
   return (
     <div className="mx-auto w-full max-w-[430px] pb-32">
-      <PageHeader title={title} right="close" />
+      <div className="print:hidden">
+        <PageHeader title={title} right="close" />
+      </div>
+      <h1 className="hidden text-center font-serif text-h2 text-heading print:block">결 · {title}</h1>
 
       <main className="space-y-[18px] px-5 pt-5">
         {isSample && (
@@ -50,12 +57,7 @@ export function ResultShell({
           </blockquote>
           <div className="mx-auto my-5 h-px w-8 bg-gold/40" />
           <figcaption className="text-caption text-dim">결, {title} 중</figcaption>
-          {!isSample && (
-            <div className="mt-6 flex justify-center gap-3 text-body">
-              <button className="min-h-11 rounded-btn border border-line px-5">저장</button>
-              <button className="min-h-11 rounded-btn border border-line px-5">공유</button>
-            </div>
-          )}
+          {!isSample && share && <ResultActions share={share} />}
           {SHOW_DONATION && !isSample && (
             <p className="mt-6 text-small leading-[1.7] text-sub">
               이 풀이와 함께 <b className="text-gold">{DONATION_PER_READING}원</b>이 기부돼요.
@@ -63,7 +65,7 @@ export function ResultShell({
               내 운을 보며, 누군가의 운도 조금 밝혀졌어요.
             </p>
           )}
-          <Link href="/" className="mt-5 inline-block min-h-11 text-body text-gold underline underline-offset-4">
+          <Link href="/" className="mt-5 inline-block min-h-11 text-body text-gold underline underline-offset-4 print:hidden">
             다른 결도 읽어보기
           </Link>
           <p className="mt-6 text-caption text-dim">사주 풀이는 삶을 돌아보는 참고용이에요</p>
@@ -71,7 +73,7 @@ export function ResultShell({
       </main>
 
       {isSample && (
-        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-background/95 px-4 pb-5 pt-3 backdrop-blur">
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-background/95 px-4 pb-5 pt-3 backdrop-blur print:hidden">
           <div className="mx-auto max-w-[430px]">
             <Link
               href={`/input/${product}`}
