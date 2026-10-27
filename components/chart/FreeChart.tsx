@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { LoginSheet } from "@/components/login/LoginSheet";
 import { ChartCard } from "@/components/result/ChartCard";
 import { ChartReadingCards } from "@/components/result/ChartReadingCards";
+import { LockedChapters } from "@/components/chart/LockedChapters";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { clearDraft, FROM_LOGIN_KEY, isExpired, parseDraft, readDraftRaw } from "@/lib/draft";
 import type { SajuChart } from "@/lib/saju/calculateSaju";
@@ -91,8 +92,10 @@ export function FreeChart() {
 
         {chart ? (
           <>
+            <p className="px-1 text-caption tracking-[0.08em] text-gold">CHAPTER 1 · 무료로 열린 사주 원국</p>
             <ChartCard chart={chart} />
             <ChartReadingCards chart={chart} product={product} />
+            <LockedChapters product={product} status={draft.input.status} onUnlock={pay} />
           </>
         ) : failed ? (
           <p role="alert" className="card p-5 text-body leading-[1.7] text-sub">
