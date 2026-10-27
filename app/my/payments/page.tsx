@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
+import { KakaoLoginButton } from "@/components/login/KakaoLoginButton";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 
 type Order = {
@@ -15,15 +17,40 @@ type Order = {
 
 const NAME: Record<string, string> = { career: "이직 · 직업운", money: "금전 · 재물운" };
 const pad = (n: number) => String(n).padStart(2, "0");
+// 서버(Vercel)는 UTC 라서 시간대를 한국으로 고정해야 결제 시각이 맞게 보인다
+const KST = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Asia/Seoul",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
 const fmt = (iso: string) => {
-  const d = new Date(iso);
-  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const p = Object.fromEntries(KST.formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
+  return `${p.year}.${p.month}.${p.day} ${p.hour}:${p.minute}`;
 };
+
+function LoginPrompt() {
+  return (
+    <main className="px-4 pt-5">
+      <section className="card p-5 text-center">
+        <p className="font-serif text-conclusion text-heading">로그인하고 결제 내역을 확인하세요</p>
+        <p className="mb-5 mt-2 text-small leading-[1.7] text-sub">카카오 계정으로 결제한 내역을 볼 수 있어요</p>
+        <KakaoLoginButton next="/my/payments" />
+      </section>
+    </main>
+  );
+}
 
 async function PaymentsBody() {
   await connection();
   // RLS(orders_select_own)가 본인 주문만 돌려준다. 실제로 승인된 주문(결제 완료 · 환불)만 보여 준다.
+  if (!SUPABASE_URL || !SUPABASE_KEY) return <LoginPrompt />;
   const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getClaims();
+  if (!auth?.claims) return <LoginPrompt />;
   const { data } = await supabase
     .from("orders")
     .select("id, product, amount, status, birth_input, approved_at, created_at")
