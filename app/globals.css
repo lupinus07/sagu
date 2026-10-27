@@ -139,3 +139,56 @@ body {
     @apply text-caption text-dim;
   }
 }
+
+
+/* ───────────────────────────────────────────────
+   인쇄 (PDF로 저장): 밝은 배경 · 어두운 글자로 바꾸고, 카드가 쪽 중간에서 잘리지 않게 한다.
+   ─────────────────────────────────────────────── */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  :root {
+    --background: #ffffff;
+    --card: #ffffff;
+    --border: #d8d4ca;
+    --gold: #8a6212;
+    --gold-bg: #f6efdc;
+    --gold-bg-2: #f6efdc;
+    --text: #2a2a2a;
+    --text-sub: #4a4741;
+    --text-dim: #6b665c;
+    --text-heading: #111111;
+    --caution: #b0502d;
+    --caution-bg: #fbeee8;
+    --caution-card: #fbeee8;
+    --caution-line: #ecd2c6;
+    --success-bg: #e8f3ea;
+    --raised: #eeeae0;
+    --sunken: #f4f1e8;
+    --chip-bg: #f1eee4;
+    --bar-gold: #b58a3a;
+    --bar-dim: #9a9384;
+    --el-wood: #3f8a52;
+    --el-fire: #c4442b;
+    --el-earth: #9a7a2a;
+    --el-metal: #6b7076;
+    --el-water: #2f6fbf;
+  }
+  html,
+  body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  * {
+    background-image: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  section,
+  figure,
+  .card {
+    break-inside: avoid;
+  }
+}

@@ -314,6 +314,13 @@ export function ResultView({ doc }: { doc: ResultDoc }) {
       isSample={doc.isSample}
       profile={doc.profile}
       closingQuote={reading.closingQuote}
+      share={{
+        product: doc.product,
+        title: isMoney ? "금전 · 재물운" : "이직 · 직업운",
+        verdictLabel: options[VERDICT_INDEX[reading.verdict]],
+        reason: reading.verdictReason,
+        keywords: reading.keywords,
+      }}
     >
       <VerdictCard
         question={question}

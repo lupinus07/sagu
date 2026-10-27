@@ -1,5 +1,10 @@
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
+import { KakaoLoginButton } from "@/components/login/KakaoLoginButton";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/env";
+import { createClient } from "@/lib/supabase/server";
 
 type Order = {
   at: string;
@@ -7,22 +12,66 @@ type Order = {
   amount: number;
   status: "paid" | "refunded";
   href: string;
+  who: string;
 };
 
-// 결제 연동 전이라 화면용 예시 값이다 (6단계에서 orders 테이블로 교체)
-const ORDERS: Order[] = [
-  { at: "2026.10.12 21:40", product: "금전 · 재물운", amount: 990, status: "paid", href: "/sample/money" },
-  { at: "2026.10.10 08:15", product: "이직 · 직업운", amount: 990, status: "paid", href: "/sample/career" },
-  { at: "2026.10.09 23:02", product: "이직 · 직업운", amount: 990, status: "refunded", href: "" },
-];
+const NAME: Record<string, string> = { career: "이직 · 직업운", money: "금전 · 재물운" };
+const pad = (n: number) => String(n).padStart(2, "0");
+// 서버(Vercel)는 UTC 라서 시간대를 한국으로 고정해야 결제 시각이 맞게 보인다
+const KST = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Asia/Seoul",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+const fmt = (iso: string) => {
+  const p = Object.fromEntries(KST.formatToParts(new Date(iso)).map((x) => [x.type, x.value]));
+  return `${p.year}.${p.month}.${p.day} ${p.hour}:${p.minute}`;
+};
 
-export default function PaymentsPage() {
+function LoginPrompt() {
+  return (
+    <main className="px-4 pt-5">
+      <section className="card p-5 text-center">
+        <p className="font-serif text-conclusion text-heading">로그인하고 결제 내역을 확인하세요</p>
+        <p className="mb-5 mt-2 text-small leading-[1.7] text-sub">카카오 계정으로 결제한 내역을 볼 수 있어요</p>
+        <KakaoLoginButton next="/my/payments" />
+      </section>
+    </main>
+  );
+}
+
+async function PaymentsBody() {
+  await connection();
+  // RLS(orders_select_own)가 본인 주문만 돌려준다. 실제로 승인된 주문(결제 완료 · 환불)만 보여 준다.
+  if (!SUPABASE_URL || !SUPABASE_KEY) return <LoginPrompt />;
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getClaims();
+  if (!auth?.claims) return <LoginPrompt />;
+  const { data } = await supabase
+    .from("orders")
+    .select("id, product, amount, status, birth_input, approved_at, created_at")
+    .in("status", ["PAID", "REFUNDED"])
+    .order("created_at", { ascending: false });
+  const ORDERS: Order[] = (data ?? []).map((o) => {
+    const i = o.birth_input as { name?: string; year: number; month: number; day: number };
+    return {
+      at: fmt(o.approved_at ?? o.created_at),
+      product: NAME[o.product] ?? o.product,
+      amount: o.amount,
+      status: o.status === "REFUNDED" ? "refunded" : "paid",
+      href: `/result/${o.id}`,
+      who: `${i.name?.trim() || "나"} · ${i.year}.${pad(i.month)}.${pad(i.day)}`,
+    };
+  });
   const paid = ORDERS.filter((o) => o.status === "paid");
   const total = paid.reduce((s, o) => s + o.amount, 0);
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[430px] pb-12">
-      <PageHeader title="결제 내역" back="/my" />
+    <>
       <main className="px-4 pt-5">
         <div className="flex items-center justify-between px-1">
           <p className="text-body text-sub">총 {paid.length}건</p>
@@ -33,7 +82,7 @@ export default function PaymentsPage() {
           {ORDERS.map((o) => {
             const refunded = o.status === "refunded";
             return (
-              <li key={o.at} className="card p-4">
+              <li key={o.href} className="card p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-small text-dim">{o.at}</span>
                   <span
@@ -50,7 +99,7 @@ export default function PaymentsPage() {
                     {o.amount.toLocaleString()}원
                   </span>
                 </div>
-                <p className="mt-1.5 text-small text-sub">정유리 · 1988.03.15</p>
+                <p className="mt-1.5 text-small text-sub">{o.who}</p>
                 {refunded ? (
                   <p className="mt-3 rounded-xl bg-sunken p-3 text-small leading-[1.6] text-sub">
                     풀이를 만드는 중 문제가 생겨 자동으로 환불됐어요. 결제 수단으로 3~5영업일 안에 돌아가요.
@@ -63,7 +112,13 @@ export default function PaymentsPage() {
                     >
                       풀이 보기
                     </Link>
-                    <button className="h-11 rounded-btn border border-line text-body text-heading">영수증</button>
+                    <Link
+                      href="/my/payments"
+                      aria-disabled
+                      className="pointer-events-none flex h-11 items-center justify-center rounded-btn border border-line text-body text-dim"
+                    >
+                      영수증 (카드사 앱에서 확인)
+                    </Link>
                   </div>
                 )}
               </li>
@@ -77,6 +132,17 @@ export default function PaymentsPage() {
         </ul>
         <button className="mt-4 min-h-11 px-1 text-body text-gold">결제 문의하기 →</button>
       </main>
+    </>
+  );
+}
+
+export default function PaymentsPage() {
+  return (
+    <div className="mx-auto min-h-screen w-full max-w-[430px] pb-12">
+      <PageHeader title="결제 내역" back="/my" />
+      <Suspense>
+        <PaymentsBody />
+      </Suspense>
     </div>
   );
 }

@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { ChartCard } from "@/components/result/ChartCard";
 import { CheckIcon } from "@/components/ui/Icons";
-import { calculateSaju } from "@/lib/saju/calculateSaju";
-import { getReading, updateReading, type DemoReading, type Product } from "@/lib/demoStore";
-import { loadSample } from "@/lib/samples";
-import type { ResultDoc } from "@/lib/ai/schemas";
+import type { SajuChart } from "@/lib/saju/calculateSaju";
+import type { InputValue, Product } from "@/lib/demoStore";
+import { ReadingSchema, type ResultDoc } from "@/lib/ai/schemas";
 import { ResultView } from "./ResultView";
 
 const STEPS: Record<Product, string[]> = {
@@ -18,23 +18,19 @@ const TIPS: Record<Product, string> = {
   career: "사주에서 나를 다스리는 기운을 관성(官星)이라고 해요. 직장과 조직의 기운이에요.",
   money: "사주에서 내가 다스리는 기운을 재성(財星)이라고 해요. 재물과 돈의 기운이에요.",
 };
-const STEP_MS = 600;
+const STEP_MS = 9_000; // 단계 하나가 채워지는 간격 (실제 생성 시간에 맞춘 연출)
 
-function buildDoc(r: DemoReading): ResultDoc | null {
-  const base = loadSample(r.product);
-  if (!base) return null;
+/** 서버에서 읽어 온 결제 완료 주문과 풀이 */
+type PaidOrder = {
+  id: string;
+  product: Product;
+  input: InputValue;
+  reading: { status: "GENERATING" | "DONE" | "FAILED"; chart: SajuChart; content: unknown } | null;
+};
+
+function buildDoc(r: PaidOrder): ResultDoc | null {
+  if (r.reading?.status !== "DONE") return null;
   const i = r.input;
-  const chart = calculateSaju({
-    year: i.year,
-    month: i.month,
-    day: i.day,
-    hour: i.hour,
-    minute: i.minute,
-    gender: i.gender,
-    calendar: i.calendar,
-    isLeapMonth: i.isLeapMonth,
-    yaJasi: i.yaJasi,
-  });
   const cal = i.calendar === "lunar" ? (i.isLeapMonth ? "음력 윤달 " : "음력 ") : "";
   // 입력은 시진의 대표 시각이라 시각 대신 시진 이름으로 보여 준다 (경계가 :30)
   const SHIJIN = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
@@ -44,8 +40,13 @@ function buildDoc(r: DemoReading): ResultDoc | null {
     name: i.name.trim() || "나",
     summary: `${cal}${i.year}년 ${i.month}월 ${i.day}일 · ${time} · ${i.gender === "female" ? "여성" : "남성"}`,
   };
-  // 풀이 문장은 아직 AI가 아니라 샘플 문구 (5단계에서 Claude 응답으로 교체)
-  const doc: ResultDoc = { ...base, isSample: false, profile, chart };
+  const doc: ResultDoc = {
+    isSample: false,
+    product: r.product,
+    profile,
+    chart: r.reading.chart,
+    reading: ReadingSchema.parse(r.reading.content),
+  };
   if (doc.product === "career") doc.status = i.status;
   return doc;
 }
@@ -79,47 +80,62 @@ function Ring({ progress }: { progress: number }) {
 
 export function ResultLoader({ id }: { id: string }) {
   const router = useRouter();
-  const [reading, setReading] = useState<DemoReading | null | undefined>(undefined);
+  const [order, setOrder] = useState<PaidOrder | null | undefined>(undefined);
+  const [refunded, setRefunded] = useState(false);
   const [step, setStep] = useState(0);
-  const [done, setDone] = useState(false);
 
+  // 풀이가 완성될 때까지 3초마다 상태를 확인한다 (생성은 서버에서 계속 진행된다)
   useEffect(() => {
-    const r = getReading(id) ?? null;
-    setReading(r);
-    if (r && !r.paid) router.replace(`/payment/mock?id=${id}`);
-    if (r?.paid && r.seen) setDone(true);
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const load = async () => {
+      try {
+        const res = await fetch(`/api/orders/${encodeURIComponent(id)}`, { cache: "no-store" });
+        const o = res.ok
+          ? ((await res.json()) as { status: string; product?: Product; input?: InputValue; reading?: PaidOrder["reading"] })
+          : null;
+        if (!alive) return;
+        if (o?.status === "PAID" && o.product && o.input) {
+          setOrder({ id, product: o.product, input: o.input, reading: o.reading ?? null });
+          if (!o.reading || o.reading.status === "GENERATING") timer = setTimeout(load, 3000);
+        } else if (o?.status === "READY") {
+          router.replace("/checkout?guest=1"); // 결제가 끝나지 않은 주문
+        } else {
+          setRefunded(o?.status === "REFUNDED");
+          setOrder(null);
+        }
+      } catch {
+        if (alive) timer = setTimeout(load, 5000); // 네트워크가 잠깐 끊겨도 계속 확인한다
+      }
+    };
+    load();
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
   }, [id, router]);
 
-  const playing = !!reading && reading.paid && !reading.seen && !done;
-  const total = reading ? STEPS[reading.product].length : 0;
+  const total = order ? STEPS[order.product].length : 0;
+  const generating = !!order && (!order.reading || order.reading.status === "GENERATING");
 
-  function finish() {
-    updateReading(id, { seen: true });
-    setDone(true);
-  }
-
+  // 연출: 단계가 순서대로 채워지되, 마지막 단계에서 완성을 기다린다
   useEffect(() => {
-    if (!playing) return;
-    let n = 0;
-    const t = setInterval(() => {
-      n += 1;
-      setStep(n);
-      if (n >= total + 1) {
-        clearInterval(t);
-        updateReading(id, { seen: true });
-        setDone(true);
-      }
-    }, STEP_MS);
+    if (!generating) return;
+    const t = setInterval(() => setStep((n) => Math.min(n + 1, total - 1)), STEP_MS);
     return () => clearInterval(t);
-  }, [playing, total, id]);
+  }, [generating, total]);
 
-  const doc = useMemo(() => (reading && done ? buildDoc(reading) : null), [reading, done]);
+  const doc = useMemo(() => (order ? buildDoc(order) : null), [order]);
 
-  if (reading === undefined) return null;
-  if (reading === null) {
+  if (order === undefined) return null;
+  if (order === null) {
     return (
       <main className="mx-auto max-w-[430px] px-4 pt-20 text-center">
-        <p className="text-sub">풀이를 찾을 수 없어요. (이 기기에서 만든 풀이만 볼 수 있어요)</p>
+        <p className="text-sub">
+          {refunded
+            ? "풀이를 만드는 중 문제가 생겨 결제가 자동으로 환불됐어요. 결제 수단으로 3~5영업일 안에 돌아가요."
+            : "풀이를 찾을 수 없어요. 결제한 계정으로 로그인했는지 확인해 주세요."}
+        </p>
         <Link href="/" className="mt-4 inline-block min-h-11 text-gold underline underline-offset-4">
           홈으로
         </Link>
@@ -127,28 +143,52 @@ export function ResultLoader({ id }: { id: string }) {
     );
   }
 
-  if (doc) {
+  if (doc) return <ResultView doc={doc} />;
+
+  if (order.reading?.status === "FAILED") {
     return (
-      <>
-        <p className="bg-gold-bg2 py-1.5 text-center text-caption text-gold">
-          흐름 확인용 · 원국은 실제 계산, 풀이 문장은 샘플이에요
-        </p>
-        <ResultView doc={doc} />
-      </>
+      <main className="mx-auto max-w-[430px] px-4 pt-20 text-center">
+        <p className="text-sub">풀이를 만들지 못했어요. 결제는 곧 자동으로 환불돼요.</p>
+        <Link href="/" className="mt-4 inline-block min-h-11 text-gold underline underline-offset-4">
+          홈으로
+        </Link>
+      </main>
     );
   }
 
-  if (!playing) return null;
-
-  const steps = STEPS[reading.product];
-  const who = reading.input.name.trim() ? `${reading.input.name.trim()}님의` : "나의";
+  const steps = STEPS[order.product];
+  const who = order.input.name.trim() ? `${order.input.name.trim()}님의` : "나의";
+  const progress = Math.min(0.95, (step + 0.5) / (total + 1));
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col px-6 pb-8 pt-14">
-      <Ring progress={Math.min(1, (step + 0.5) / (total + 1))} />
+      <Ring progress={progress} />
       <h1 className="mt-10 text-center font-serif text-h2 text-heading">{who} 결을 읽고 있어요</h1>
-      <p className="mt-3 text-center text-body text-sub">보통 30초에서 1분쯤 걸려요</p>
+      <p className="mt-3 text-center text-body text-sub">보통 1분쯤 걸려요</p>
 
-      <ul className="mt-8 space-y-[18px] card px-6 py-6">
+      <div
+        role="progressbar"
+        aria-label="풀이 생성 진행"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+        className="mt-6"
+      >
+        <div className="h-2 overflow-hidden rounded-full bg-line">
+          <div
+            className="h-full rounded-full bg-gold transition-[width] duration-700"
+            style={{ width: `${Math.round(progress * 100)}%` }}
+          />
+        </div>
+        <p className="mt-2 text-right text-caption text-dim">{Math.round(progress * 100)}%</p>
+      </div>
+
+      {order.reading?.chart && (
+        <div className="mt-4">
+          <ChartCard chart={order.reading.chart} />
+        </div>
+      )}
+
+      <ul className="mt-6 space-y-[18px] card px-6 py-6">
         {steps.map((label, i) => {
           const state = i < step ? "done" : i === step ? "now" : "wait";
           return (
@@ -180,20 +220,13 @@ export function ResultLoader({ id }: { id: string }) {
 
       <div className="mt-6 flex gap-4 rounded-card bg-gold-bg2 p-5 text-body leading-[1.7]">
         <span className="shrink-0 font-bold text-gold">알고 계셨나요?</span>
-        <p>{TIPS[reading.product]}</p>
+        <p>{TIPS[order.product]}</p>
       </div>
 
-      <button
-        type="button"
-        onClick={finish}
-        className="mt-7 h-[54px] w-full rounded-btn border border-gold/25 bg-card text-lead font-bold text-gold"
-      >
-        완성된 부분 먼저 보기
-      </button>
-      <p className="mt-4 text-center text-small leading-[1.7] text-dim">
+      <p className="mt-7 text-center text-small leading-[1.7] text-dim">
         창을 닫아도 풀이는 계속 만들어져요.
         <br />
-        완성되면 내 풀이에서 볼 수 있어요.
+        완성되면 내 풀이에서 볼 수 있어요. (비회원은 이 주소를 저장해 두세요)
       </p>
     </main>
   );

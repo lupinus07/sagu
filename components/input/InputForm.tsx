@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CheckIcon, CloseIcon } from "@/components/ui/Icons";
@@ -136,6 +135,13 @@ export function InputForm({ product }: { product: Product }) {
     };
     // 사주 원국 · 로그인 · 결제를 거쳐도 이어지도록 입력값을 먼저 보관한다 (1시간)
     saveDraft(product, value);
+    // 로그인한 회원은 다음에 "이전에 입력한 사주"로 불러올 수 있게 저장한다 (비회원은 서버가 401로 무시, 실패해도 흐름은 계속)
+    fetch("/api/saju-inputs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(value),
+      keepalive: true,
+    }).catch(() => {});
     router.push("/chart");
   }
 
@@ -339,12 +345,6 @@ export function InputForm({ product }: { product: Product }) {
         >
           무료 풀이 받기
         </button>
-        <p className="mt-4 text-center text-body text-sub">
-          어떤 풀이를 받나요?{" "}
-          <Link href={`/sample/${product}`} className="text-gold underline underline-offset-4">
-            샘플 보기 →
-          </Link>
-        </p>
       </div>
     </div>
   );

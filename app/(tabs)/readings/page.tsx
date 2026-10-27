@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { KakaoLoginButton } from "@/components/login/KakaoLoginButton";
 import { ChevronIcon } from "@/components/ui/Icons";
-import { listReadings, type Product } from "@/lib/demoStore";
+import type { InputValue, Product } from "@/lib/demoStore";
 import { loadSample } from "@/lib/samples";
+import { SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/env";
+import { createClient } from "@/lib/supabase/client";
 
 const NAME = { career: "이직운", money: "금전 · 재물운" } as const;
 const VERDICT_TEXT: Record<string, string> = {
@@ -17,42 +20,56 @@ const VERDICT_TEXT: Record<string, string> = {
 };
 
 type Item = {
-  progress?: boolean;
   key: string;
   href: string;
   product: Product;
   who: string;
   date: string;
-  fresh?: boolean;
 };
 
 const fmt = (d: Date) =>
   `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 
-// 저장된 풀이가 없을 때 보여 주는 화면용 예시 (샘플 풀이로 연결)
-const EXAMPLES: Item[] = [
-  { key: "ex-wait", href: "#", product: "career", who: "정민준 · 2001.08.21", date: "방금 전", progress: true },
-  { key: "ex-money", href: "/sample/money", product: "money", who: "정유리 · 1988.03.15", date: "2026.10.12", fresh: true },
-  { key: "ex-career", href: "/sample/career", product: "career", who: "정유리 · 1988.03.15", date: "2026.10.10" },
-];
-
 type Tab = "all" | Product;
 
 export default function ReadingsPage() {
   const [items, setItems] = useState<Item[] | null>(null);
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>("all");
 
+  // 내 풀이는 로그인한 사람만 본다. 비회원은 조회할 수 없다.
   useEffect(() => {
-    const real = listReadings()
-      .filter((r) => r.paid)
-      .map<Item>((r) => ({
-        key: r.id,
-        href: `/result/${r.id}`,
-        product: r.product,
-        who: `${r.input.name.trim() || "나"} · ${r.input.year}.${String(r.input.month).padStart(2, "0")}.${String(r.input.day).padStart(2, "0")}`,
-        date: fmt(new Date(r.createdAt)),
-      }));
-    setItems(real.length > 0 ? real : EXAMPLES);
+    (async () => {
+      let ok = false;
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        try {
+          const { data } = await createClient().auth.getClaims();
+          ok = !!data?.claims;
+        } catch {
+          ok = false;
+        }
+      }
+      setLoggedIn(ok);
+      if (!ok) return;
+      // RLS(orders_select_own)가 본인 주문만 돌려준다. 결제가 끝난 주문만 풀이로 보여 준다.
+      const { data } = await createClient()
+        .from("orders")
+        .select("id, product, birth_input, approved_at, created_at")
+        .eq("status", "PAID")
+        .order("created_at", { ascending: false });
+      setItems(
+        (data ?? []).map<Item>((o) => {
+          const i = o.birth_input as InputValue;
+          return {
+            key: o.id,
+            href: `/result/${o.id}`,
+            product: o.product as Product,
+            who: `${i.name.trim() || "나"} · ${i.year}.${String(i.month).padStart(2, "0")}.${String(i.day).padStart(2, "0")}`,
+            date: fmt(new Date(o.approved_at ?? o.created_at)),
+          };
+        }),
+      );
+    })();
   }, []);
 
   const shown = (items ?? []).filter((x) => tab === "all" || x.product === tab);
@@ -63,6 +80,25 @@ export default function ReadingsPage() {
     ["career", "커리어"],
     ["money", "재물"],
   ];
+
+  if (loggedIn === false) {
+    return (
+      <main>
+        <h1 className="flex h-[60px] items-center justify-center border-b border-line font-serif text-screen text-heading">
+          내 풀이
+        </h1>
+        <div className="px-5 pt-5">
+          <section className="card p-5 text-center">
+            <p className="font-serif text-conclusion text-heading">로그인하고 확인해 보세요</p>
+            <p className="mb-5 mt-2 text-small leading-[1.7] text-sub">
+              로그인한 상태로 결제한 풀이를 언제든 다시 볼 수 있어요
+            </p>
+            <KakaoLoginButton next="/readings" />
+          </section>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main>
@@ -85,25 +121,11 @@ export default function ReadingsPage() {
           ))}
         </div>
 
+        {items && items.length === 0 && (
+          <p className="py-10 text-center text-body text-sub">아직 결제한 내역이 없어요</p>
+        )}
+
         {shown.map((x) => {
-          if (x.progress) {
-            return (
-              <div key={x.key} className="rounded-card border border-dashed border-gold/40 bg-gold-bg p-[18px]">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lead font-bold text-heading">취업운</h2>
-                  <span className="text-small text-dim">{x.date}</span>
-                </div>
-                <p className="mt-2 text-small text-sub">{x.who}</p>
-                <p className="mt-2.5 flex items-center gap-2.5 text-body font-bold text-gold">
-                  <span className="size-5 animate-spin rounded-full border-2 border-gold border-r-transparent" />
-                  풀이를 만드는 중이에요
-                </p>
-                <div className="mt-2.5 h-1.5 rounded-full bg-line">
-                  <div className="h-full w-[60%] rounded-full bg-gold" />
-                </div>
-              </div>
-            );
-          }
           const s = loadSample(x.product)!;
           return (
             <Link
@@ -113,9 +135,6 @@ export default function ReadingsPage() {
             >
               <div className="flex items-center gap-2.5">
                 <h2 className="text-lead font-bold text-heading">{NAME[x.product]}</h2>
-                {x.fresh && (
-                  <span className="rounded-md bg-gold px-2 py-0.5 text-caption font-bold text-background">NEW</span>
-                )}
                 <span className="ml-auto text-small text-dim">{x.date}</span>
               </div>
               <p className="mt-2 text-small text-sub">{x.who}</p>
@@ -130,14 +149,6 @@ export default function ReadingsPage() {
           );
         })}
 
-        <Link
-          href="/"
-          className="block rounded-card border border-gold/20 bg-gradient-to-br from-card to-[#221e15] p-5"
-        >
-          <p className="text-body text-gold">아직 읽지 않은 결</p>
-          <p className="mt-3 text-screen font-bold leading-snug text-heading">나라는 사람을 깊이 읽는, 나의 결</p>
-          <p className="mt-5 text-body font-bold text-gold">둘러보기 →</p>
-        </Link>
       </div>
     </main>
   );

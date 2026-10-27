@@ -43,15 +43,22 @@ function Check({ checked, onChange, children }: { checked: boolean; onChange: (v
   );
 }
 
-/** 결제 확인 화면 (주문 내용 · 결제 수단 · 동의). 토스 결제위젯은 6단계에서 이 안에 들어간다. */
+/** 결제 확인 화면 (주문 내용 · 결제 수단 · 동의). 토스 결제위젯이 이 안에 들어간다. */
 export function PaymentView({
   product,
   input: i,
   onPay,
+  ready = true,
+  busy = false,
+  error = null,
 }: {
   product: Product;
   input: InputValue;
   onPay: () => void;
+  /** 결제위젯이 준비되기 전에는 결제 버튼을 막는다 */
+  ready?: boolean;
+  busy?: boolean;
+  error?: string | null;
 }) {
   const [agree1, setAgree1] = useState(true);
   const [agree2, setAgree2] = useState(true);
@@ -63,11 +70,11 @@ export function PaymentView({
     ["태어난 시간", birthTime(i)],
     ["성별", i.gender === "female" ? "여성" : "남성"],
   ];
-  const ok = agree1 && agree2;
+  const ok = agree1 && agree2 && ready && !busy;
 
   return (
     <div className="mx-auto w-full max-w-[430px] pb-10">
-      <PageHeader title="결제하기" back={`/input/${product}`} />
+      <PageHeader title="결제하기" back="/chart" history />
       <main className="space-y-4 px-4 pt-6">
         <section className="card p-5">
           <div className="flex items-center gap-3">
@@ -94,16 +101,11 @@ export function PaymentView({
         <section className="card p-5">
           <h2 className="text-body font-bold text-heading">받게 될 풀이 · {p.count}개 챕터</h2>
           <p className="mt-3 text-body leading-[1.9] text-sub">{p.chapters}</p>
-          <Link href={`/sample/${product}`} className="mt-4 inline-block min-h-11 text-body text-gold">
-            샘플로 미리 보기 →
-          </Link>
         </section>
 
         <h2 className="pt-2 text-body font-bold text-heading">결제 수단</h2>
-        <div className="flex h-[150px] flex-col items-center justify-center gap-2 rounded-card border border-dashed border-line text-center">
-          <p className="text-body font-bold text-sub">토스페이먼츠 결제위젯 영역</p>
-          <p className="text-body text-dim">카드 · 간편결제 · 계좌이체</p>
-        </div>
+        {/* 토스 결제위젯이 이 자리에 그려진다 (Checkout 에서 렌더) */}
+        <div id="payment-method" className="min-h-[150px] overflow-hidden rounded-card bg-white" />
 
         <section className="card p-5">
           <div className="flex justify-between text-body">
@@ -141,13 +143,18 @@ export function PaymentView({
           </Check>
         </div>
 
+        {error && (
+          <p role="alert" className="px-1 text-small leading-[1.6] text-caution">
+            {error}
+          </p>
+        )}
         <button
           type="button"
           onClick={() => onPay()}
           disabled={!ok}
           className="btn-primary mt-4 h-14 w-full text-conclusion"
         >
-          990원 결제하기
+          {busy ? "결제창을 여는 중…" : "990원 결제하기"}
         </button>
       </main>
     </div>

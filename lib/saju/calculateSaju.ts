@@ -53,6 +53,8 @@ export type LuckPillarItem = {
 };
 
 export type SajuChart = {
+  /** 양력 출생 연도 (세운과 대운을 맞춰 볼 때 쓴다. 예전에 저장된 차트에는 없을 수 있다) */
+  birthYear?: number;
   year: PillarInfo;
   month: PillarInfo;
   day: PillarInfo;
@@ -193,6 +195,7 @@ export function calculateSaju(input: SajuInput): SajuChart {
     pillars.find((p) => koreanAge >= p.startAge && koreanAge <= p.endAge) ?? null;
 
   return {
+    birthYear: year,
     year: year_,
     month: month_,
     day: day_,
